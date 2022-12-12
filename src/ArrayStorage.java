@@ -15,7 +15,7 @@ public class ArrayStorage {
     }
     
     void save(Resume r) {
-        if (resumeCount == storage.length) {
+        if (resumeCount >= storage.length) {
             System.out.println("В хранилище резюме нет свободного места!");
         } else {
             storage[resumeCount++] = r;
@@ -23,7 +23,11 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
-        for (int i = 0; i < storage.length; i++) if (storage[i].uuid.equals(uuid)) return storage[i];
+        for (int i = 0; i < storage.length; i++) {
+            if (storage[i].uuid.equals(uuid)) {
+                return storage[i];
+            }
+        }
         return null;
     }
 
@@ -36,11 +40,12 @@ public class ArrayStorage {
             }
         }
         if (index == -1) {
-            throw new NullPointerException("Резюме не найдено");
+            System.out.println("Резюме не найдено");
         }
         for (int i = index; i < resumeCount - 1; i++) {
             storage[i] = storage[i + 1];
         }
+        storage[resumeCount - 1] = null;
         resumeCount--;
     }
 
@@ -48,7 +53,7 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, resumeCount);
+        return Arrays.copyOf(storage, resumeCount);
     }
 
     int size() {
