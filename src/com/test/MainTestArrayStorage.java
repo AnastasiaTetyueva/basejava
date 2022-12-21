@@ -1,6 +1,11 @@
 /**
  * Test for your ArrayStorage implementation
  */
+package com.test;
+
+import com.models.Resume;
+import com.storages.ArrayStorage;
+
 public class MainTestArrayStorage {
     static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
 

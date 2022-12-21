@@ -1,20 +1,24 @@
 /**
  * Array based storage for Resumes
  */
+package com.storages;
+
+import com.models.Resume;
+
 import java.util.Arrays;
 
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
     int resumeCount = 0;
 
-    void clear() {
+    public void clear() {
         for (int i = 0; i < resumeCount; i++) {
             storage[i] = null;
         }
         resumeCount = 0;
     }
     
-    void save(Resume r) {
+    public void save(Resume r) {
         if (resumeCount >= storage.length) {
             System.out.println("В хранилище резюме нет свободного места!");
         } else {
@@ -22,7 +26,7 @@ public class ArrayStorage {
         }
     }
 
-    Resume get(String uuid) {
+    public Resume get(String uuid) {
         for (int i = 0; i < storage.length; i++) {
             if (storage[i].uuid.equals(uuid)) {
                 return storage[i];
@@ -31,7 +35,7 @@ public class ArrayStorage {
         return null;
     }
 
-    void delete(String uuid) {
+    public void delete(String uuid) {
         int index = -1;
         for (int i = 0; i < resumeCount; i++) {
             if (storage[i].uuid.equals(uuid)) {
@@ -52,11 +56,11 @@ public class ArrayStorage {
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
+    public Resume[] getAll() {
         return Arrays.copyOf(storage, resumeCount);
     }
 
-    int size() {
+    public int size() {
         return resumeCount;
     }
 }
