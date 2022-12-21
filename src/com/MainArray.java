@@ -1,5 +1,3 @@
-package com.impl;
-
 import com.storages.ArrayStorage;
 import com.models.Resume;
 
