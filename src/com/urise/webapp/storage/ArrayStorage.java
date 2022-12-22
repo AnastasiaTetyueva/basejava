@@ -21,15 +21,12 @@ public class ArrayStorage {
             System.out.println("В хранилище резюме нет свободного места!");
             return;
         }
-        for (int i = 0; i < resumeCount; i++) {
-            if (storage[i] == r) {
-                System.out.printf("Такое резюме уже есть в хранилище: %s", r.getUuid());
-                return;
-            }
-            else {
-                storage[resumeCount++] = r;
-            }
+        Resume current = this.get(r.getUuid());
+        if (current != null) {
+            System.out.printf("В хранилище уже есть такое резюме: %s", current.getUuid());
+            return;
         }
+        storage[resumeCount++] = r;
     }
 
     public Resume get(String uuid) {
