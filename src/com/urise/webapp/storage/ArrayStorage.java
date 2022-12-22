@@ -1,15 +1,15 @@
 /**
  * Array based storage for Resumes
  */
-package com.storages;
+package com.urise.webapp.storage;
 
-import com.models.Resume;
+import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
 
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
-    int resumeCount = 0;
+    private Resume[] storage = new Resume[10000];
+    private int resumeCount = 0;
 
     public void clear() {
         Arrays.fill(storage, 0, resumeCount, null);
@@ -23,7 +23,7 @@ public class ArrayStorage {
         }
         for (int i = 0; i < resumeCount; i++) {
             if (storage[i] == r) {
-                System.out.printf("Такое резюме уже есть в хранилище: %s", r.uuid);
+                System.out.printf("Такое резюме уже есть в хранилище: %s", r.getUuid());
                 return;
             }
             else {
@@ -38,7 +38,7 @@ public class ArrayStorage {
             return null;
         }
         for (int i = 0; i < resumeCount; i++) {
-            if (storage[i].uuid.equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return storage[i];
             }
         }
@@ -53,7 +53,7 @@ public class ArrayStorage {
             return;
         }
         for (int i = 0; i < resumeCount; i++) {
-            if (storage[i].uuid.equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 index = i;
                 break;
             }
@@ -81,12 +81,12 @@ public class ArrayStorage {
 
     public void update(Resume resume) {
         for (int i = 0; i < resumeCount; i++) {
-            if (storage[i].uuid.equals(resume.uuid)) {
+            if (storage[i].getUuid().equals(resume.getUuid())) {
                 storage[i] = resume;
                 return;
             }
         }
-        System.out.printf("В хранилище нет такого резюме: %s", resume.uuid);
+        System.out.printf("В хранилище нет такого резюме: %s", resume.getUuid());
     }
 
 }
