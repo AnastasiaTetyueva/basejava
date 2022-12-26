@@ -20,9 +20,10 @@ public class ArrayStorage {
     }
     
     public void save(Resume r) {
+        int index = getSearchKey(r.getUuid());
         if (resumeCount >= storage.length) {
             System.out.println("В хранилище резюме нет свободного места!");
-        } else if (this.get(r.getUuid()) != null) {
+        } else if (index != -1) {
             System.out.printf("В хранилище уже есть такое резюме: %s", r.getUuid());
         } else {
             storage[resumeCount++] = r;
@@ -30,11 +31,7 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        if (resumeCount == 0) {
-            System.out.println("Хранилище пустое!");
-            return null;
-        }
-        int index = this.getSearchKey(uuid);
+        int index = getSearchKey(uuid);
         if (index != -1) {
             return storage[index];
         }
@@ -42,15 +39,9 @@ public class ArrayStorage {
     }
 
     public void delete(String uuid) {
-        if (resumeCount == 0) {
-            System.out.println("Хранилище пустое!");
-            return;
-        }
-        int index = this.getSearchKey(uuid);
+        int index = getSearchKey(uuid);
         if (index != -1) {
-            for (int i = index; i < resumeCount - 1; i++) {
-                storage[i] = storage[i + 1];
-            }
+            storage[index] = storage[resumeCount - 1];
             storage[resumeCount - 1] = null;
             resumeCount--;
         }
@@ -68,8 +59,7 @@ public class ArrayStorage {
     }
 
     public void update(Resume resume) {
-        String uuid = resume.getUuid();
-        int index = this.getSearchKey(uuid);
+        int index = getSearchKey(resume.getUuid());
         if (index != -1) {
             storage[index] = resume;
         }
