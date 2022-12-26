@@ -7,12 +7,7 @@ import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
 
-public class ArrayStorage {
-    public static final int STORAGE_LIMIT = 10000;
-
-    private final Resume[] storage = new Resume[STORAGE_LIMIT];
-
-    private int resumeCount = 0;
+public class ArrayStorage extends AbstractArrayStorage {
 
     public void clear() {
         Arrays.fill(storage, 0, resumeCount, null);
@@ -28,14 +23,6 @@ public class ArrayStorage {
         } else {
             storage[resumeCount++] = r;
         }
-    }
-
-    public Resume get(String uuid) {
-        int index = getSearchKey(uuid);
-        if (index != -1) {
-            return storage[index];
-        }
-        return null;
     }
 
     public void delete(String uuid) {
@@ -54,10 +41,6 @@ public class ArrayStorage {
         return Arrays.copyOf(storage, resumeCount);
     }
 
-    public int size() {
-        return resumeCount;
-    }
-
     public void update(Resume resume) {
         int index = getSearchKey(resume.getUuid());
         if (index != -1) {
@@ -65,7 +48,7 @@ public class ArrayStorage {
         }
     }
 
-    private int getSearchKey(String uuid) {
+    protected int getSearchKey(String uuid) {
         for (int i = 0; i < resumeCount; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
