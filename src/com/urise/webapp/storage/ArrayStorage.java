@@ -8,11 +8,6 @@ import com.urise.webapp.model.Resume;
 import java.util.Arrays;
 
 public class ArrayStorage extends AbstractArrayStorage {
-
-    public void clear() {
-        Arrays.fill(storage, 0, resumeCount, null);
-        resumeCount = 0;
-    }
     
     public void save(Resume r) {
         int index = getSearchKey(r.getUuid());
@@ -32,13 +27,6 @@ public class ArrayStorage extends AbstractArrayStorage {
             storage[resumeCount - 1] = null;
             resumeCount--;
         }
-    }
-
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, resumeCount);
     }
 
     public void update(Resume resume) {
