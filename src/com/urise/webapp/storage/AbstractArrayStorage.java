@@ -2,7 +2,6 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.Arrays;
 
 /**
  * Array based storage for Resumes
@@ -12,11 +11,6 @@ public abstract class AbstractArrayStorage implements Storage {
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int resumeCount = 0;
-
-    public void clear() {
-        Arrays.fill(storage, 0, resumeCount, null);
-        resumeCount = 0;
-    }
 
     public int size() {
         return resumeCount;
@@ -28,10 +22,6 @@ public abstract class AbstractArrayStorage implements Storage {
             return storage[index];
         }
         return null;
-    }
-
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, resumeCount);
     }
 
     protected abstract int getSearchKey(String uuid);

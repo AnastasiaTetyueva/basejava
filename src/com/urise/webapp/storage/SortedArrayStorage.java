@@ -6,6 +6,12 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage{
 
     @Override
+    public void clear() {
+        Arrays.fill(storage, 0, resumeCount, null);
+        resumeCount = 0;
+    }
+
+    @Override
     public void save(Resume r) {
         if (resumeCount >= storage.length) {
             System.out.println("В хранилище резюме нет свободного места!");
@@ -16,12 +22,12 @@ public class SortedArrayStorage extends AbstractArrayStorage{
             System.out.printf("В хранилище уже есть такое резюме: %s", r.getUuid());
         } else {
             index = Math.abs(index + 1);
-            storage[index] = r;
-            if (resumeCount > 0) {
-                for (int i = resumeCount - 1; i > index; i--) {
-                    storage[i] = storage[i + 1];
+            if (index < resumeCount) {
+                for (int i = resumeCount - 1; i >= index; i--) {
+                    storage[i + 1] = storage[i];
                 }
             }
+            storage[index] = r;
             resumeCount++;
         }
     }
@@ -31,13 +37,13 @@ public class SortedArrayStorage extends AbstractArrayStorage{
         int index = getSearchKey(uuid);
         if (index < 0) {
             System.out.printf("В хранилище нет такого резюме: %s", uuid);
-            return;
+        } else {
+            for (int i = index; i < resumeCount; i++) {
+                storage[i] = storage[i + 1];
+            }
+            storage[resumeCount - 1] = null;
+            resumeCount--;
         }
-        for (int i = index; i < resumeCount - 1; i++) {
-            storage[index] = storage[index + 1];
-        }
-        storage[resumeCount - 1] = null;
-        resumeCount--;
     }
 
     @Override
@@ -46,6 +52,10 @@ public class SortedArrayStorage extends AbstractArrayStorage{
         if (index >= 0) {
             storage[index] = r;
         }
+    }
+
+    public Resume[] getAll() {
+        return Arrays.copyOf(storage, resumeCount);
     }
 
     @Override
