@@ -6,16 +6,6 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage{
 
     @Override
-    public void clear() {
-        Arrays.fill(storage, 0, resumeCount, null);
-        resumeCount = 0;
-    }
-
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, resumeCount);
-    }
-
-    @Override
     protected int getSearchKey(String uuid) {
         Resume searchKey = new Resume();
         searchKey.setUuid(uuid);

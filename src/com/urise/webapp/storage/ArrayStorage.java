@@ -9,15 +9,6 @@ import java.util.Arrays;
 
 public class ArrayStorage extends AbstractArrayStorage {
 
-    public void clear() {
-        Arrays.fill(storage, 0, resumeCount, null);
-        resumeCount = 0;
-    }
-
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, resumeCount);
-    }
-
     protected int getSearchKey(String uuid) {
         for (int i = 0; i < resumeCount; i++) {
             if (storage[i].getUuid().equals(uuid)) {
