@@ -5,8 +5,6 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.Arrays;
-
 public class ArrayStorage extends AbstractArrayStorage {
 
     protected int getSearchKey(String uuid) {
@@ -15,7 +13,6 @@ public class ArrayStorage extends AbstractArrayStorage {
                 return i;
             }
         }
-        System.out.printf("В хранилище нет такого резюме: %s", uuid);
         return -(resumeCount + 1);
     }
 
