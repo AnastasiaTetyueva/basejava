@@ -1,5 +1,7 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.ExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +11,7 @@ import com.urise.webapp.model.Resume;
 public abstract class AbstractArrayStorageTest {
     private Storage storage;
 
-    private AbstractArrayStorageTest() {
+    public AbstractArrayStorageTest() {
         storage = new ArrayStorage();
     }
 
@@ -32,18 +34,17 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test
-    public void clear() throws Exception {
-        Assert.assertEquals(0, storage.size());
-    }
-
-    @Test
     public void update() throws Exception {
 
     }
 
     @Test
     public void getAll() throws Exception {
-
+        storage.getAll();
+        Assert.assertTrue(storage.get("uuid1").equals("uuid1"));
+        Assert.assertTrue(storage.get("uuid2").equals("uuid2"));
+        Assert.assertTrue(storage.get("uuid3").equals("uuid3"));
+        Assert.assertNull("uuid4");
     }
 
     @Test
@@ -63,9 +64,39 @@ public abstract class AbstractArrayStorageTest {
         Assert.assertTrue(storage.get("uuid1").equals("uuid1"));
     }
 
+    @Test
+    public void clear() throws Exception {
+        storage.clear();
+        Assert.assertEquals(0, storage.size());
+    }
+
     @Test(expected = NotExistStorageException.class)
     public void getNotExist() throws Exception {
         storage.get("dummy");
+    }
+
+    @Test(expected = ExistStorageException.class)
+    public void saveSameResumeException() throws Exception {
+        storage.save(new Resume(UUID_1));
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void deleteException() throws Exception {
+        storage.delete("uuid5");
+    }
+
+    @Test(expected = StorageException.class)
+    public void saveOverflowException() throws Exception {
+        storage.clear();
+        for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT + 1; i++) {
+            try {
+                storage.save(new Resume(Integer.toString(i)));
+            } catch (Exception e) {
+                if (i < AbstractArrayStorage.STORAGE_LIMIT) {
+                    Assert.fail("Storage is not overflow!");
+                }
+            }
+        }
     }
 
 }
