@@ -16,20 +16,24 @@ public abstract class AbstractArrayStorageTest {
     }
 
     private static final String UUID1 = "uuid1";
-    private static final Resume RESUME_1 = new Resume(UUID1);
-
     private static final String UUID2 = "uuid2";
-    private static final Resume RESUME_2 = new Resume(UUID2);
-
     private static final String UUID3 = "uuid3";
-    private static final Resume RESUME_3 = new Resume(UUID3);
-
     private static final String UUID4 = "uuid4";
-    private static final Resume RESUME_4 = new Resume(UUID4);
-
-    private static final Resume RESUME_5 = new Resume(UUID1);
-
     private static final String UUID_NOT_EXIST = "dummy";
+
+    private static final Resume RESUME_1;
+    private static final Resume RESUME_2;
+    private static final Resume RESUME_3;
+    private static final Resume RESUME_4;
+    private static final Resume RESUME_5;
+
+    static {
+        RESUME_1 = new Resume(UUID1);
+        RESUME_2 = new Resume(UUID2);
+        RESUME_3 = new Resume(UUID3);
+        RESUME_4 = new Resume(UUID4);
+        RESUME_5 = new Resume(UUID1);
+    }
 
     @Before
     public void setUp() throws Exception {
