@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 public class ListStorage extends AbstractStorage {
-    ArrayList<Resume> storage = new ArrayList<>();
+    private ArrayList<Resume> storage = new ArrayList<>();
 
     @Override
     public void clear() {
