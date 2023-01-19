@@ -10,37 +10,20 @@ public abstract class AbstractStorage implements Storage {
 
     }
 
-    public final void update(Resume resume) {
-        int index = getSearchKey(resume.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(resume.getUuid());
-        }
-        if (index >= 0) {
-            replaceAt(resume, index);
-        }
+    public void save(Resume r) {
+
     }
 
-    public final void save(Resume r) {
-        int index = getSearchKey(r.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(r.getUuid());
-        } else {
-            insertAt(r, index);
-        }
+    public void update(Resume resume) {
+
+    }
+
+    public void delete(String uuid) {
+
     }
 
     public Resume get(String uuid) {
         return null;
-    }
-
-    public final void delete(String uuid) {
-        int index = getSearchKey(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        if (index >= 0) {
-            deleteAt(index);
-        }
     }
 
     public Resume[] getAll() {
@@ -51,13 +34,7 @@ public abstract class AbstractStorage implements Storage {
         return 0;
     }
 
-    protected abstract int getSearchKey(String uuid);
 
-    protected  abstract void insertAt(Resume r, int index);
-
-    protected  abstract void deleteAt(int index);
-
-    protected abstract void replaceAt(Resume r, int index);
 
 
 }

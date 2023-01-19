@@ -1,5 +1,6 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
@@ -12,6 +13,27 @@ public class ListStorage extends AbstractStorage {
     @Override
     public void clear() {
         storage.clear();
+    }
+
+    @Override
+    public void save(Resume r) {
+        if (findIterator(r.getUuid()) != null) {
+            throw new ExistStorageException(r.getUuid());
+        }
+        storage.add(r);
+    }
+
+    @Override
+    public void update(Resume resume) {
+        findIterator(resume.getUuid()).set(resume);
+    }
+
+    @Override
+    public void delete(String uuid) {
+        if (findIterator(uuid) == null) {
+            throw new NotExistStorageException(uuid);
+        }
+        findIterator(uuid).remove();
     }
 
     @Override
@@ -38,33 +60,17 @@ public class ListStorage extends AbstractStorage {
         return storage.size();
     }
 
-    @Override
-    protected int getSearchKey(String uuid) {
+
+    private ListIterator<Resume> findIterator(String uuid) {
         ListIterator<Resume> iterator = storage.listIterator();
-        int counter = 0;
         while (iterator.hasNext()) {
             Resume r = iterator.next();
             if (r.getUuid().equals(uuid)) {
-                return counter;
+                return iterator;
             }
-            counter++;
         }
-        return -(counter + 1);
+        return null;
     }
 
-    @Override
-    protected void insertAt(Resume r, int index) {
-        storage.add(r);
-    }
-
-    @Override
-    protected void deleteAt(int index) {
-        storage.remove(index);
-    }
-
-    @Override
-    protected void replaceAt(Resume r, int index) {
-        storage.set(index, r);
-    }
 
 }
