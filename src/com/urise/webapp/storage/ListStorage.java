@@ -1,76 +1,66 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<ListStorageKey> {
     private ArrayList<Resume> storage = new ArrayList<>();
 
     @Override
-    public void clear() {
+    protected ListStorageKey getSearchKey(String uuid) {
+        ListIterator<Resume> iterator = storage.listIterator();
+        int index = 0;
+        while (iterator.hasNext()) {
+            Resume r = iterator.next();
+            if (r.getUuid().equals(uuid)) {
+                return new ListStorageKey(index);
+            }
+            index++;
+        }
+        return new ListStorageKey(-1);
+    }
+
+    @Override
+    protected boolean isExist(ListStorageKey key) {
+        return key.index >= 0;
+    }
+
+    @Override
+    protected void doClear() {
         storage.clear();
     }
 
     @Override
-    public void save(Resume r) {
-        if (findIterator(r.getUuid()) != null) {
-            throw new ExistStorageException(r.getUuid());
-        }
-        storage.add(r);
+    protected void doSave(ListStorageKey key, Resume resume) {
+        storage.add(resume);
     }
 
     @Override
-    public void update(Resume resume) {
-        findIterator(resume.getUuid()).set(resume);
+    protected void doUpdate(ListStorageKey key, Resume resume) {
+        storage.set(key.index, resume);
     }
 
     @Override
-    public void delete(String uuid) {
-        if (findIterator(uuid) == null) {
-            throw new NotExistStorageException(uuid);
-        }
-        findIterator(uuid).remove();
+    protected void doDelete(ListStorageKey key) {
+        storage.remove(key.index);
     }
 
     @Override
-    public Resume get(String uuid) {
-        ListIterator<Resume> iterator = storage.listIterator();
-        while (iterator.hasNext()) {
-            Resume r = iterator.next();
-            if (r.getUuid().equals(uuid)) {
-                return r;
-            }
-        }
-        throw new NotExistStorageException(uuid);
+    protected Resume doGet(ListStorageKey key) {
+        return storage.get(key.index);
     }
 
     @Override
-    public Resume[] getAll() {
+    protected Resume[] doGetAll() {
         Resume list[] = new Resume[storage.size()];
         list = storage.toArray(list);
         return list;
     }
-
     @Override
-    public int size() {
+    protected int doSize() {
         return storage.size();
     }
-
-
-    private ListIterator<Resume> findIterator(String uuid) {
-        ListIterator<Resume> iterator = storage.listIterator();
-        while (iterator.hasNext()) {
-            Resume r = iterator.next();
-            if (r.getUuid().equals(uuid)) {
-                return iterator;
-            }
-        }
-        return null;
-    }
-
 
 }

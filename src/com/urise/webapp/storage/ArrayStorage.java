@@ -9,13 +9,13 @@ import com.urise.webapp.model.Resume;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected int getSearchKey(String uuid) {
+    protected ArrayStorageKey getSearchKey(String uuid) {
         for (int i = 0; i < resumeCount; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                return i;
+                return new ArrayStorageKey(i);
             }
         }
-        return -(resumeCount + 1);
+        return new ArrayStorageKey(-1);
     }
 
     @Override
