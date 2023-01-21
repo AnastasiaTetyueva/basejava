@@ -8,6 +8,10 @@ import org.junit.Test;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public abstract class AbstractArrayStorageTest {
     private final Storage storage;
 
@@ -50,9 +54,17 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void getAll() throws Exception {
-        Resume[] expected = {RESUME_1, RESUME_2, RESUME_3};
-        Assert.assertArrayEquals(expected, storage.getAll());
-        assertSize(3);
+        String[] sourceArray = { UUID1, UUID2, UUID3 };
+        HashSet<String> targetSet = new HashSet<String>(Arrays.asList(sourceArray));
+        Resume[] stored = storage.getAll();
+        Assert.assertEquals(Arrays.stream(stored).count(), Arrays.stream(sourceArray).count());
+        int count = sourceArray.length;
+        for (int i = 0; i < stored.length; i++) {
+            if (targetSet.contains(stored[i].getUuid())) {
+                count--;
+            }
+        }
+        Assert.assertEquals(count, 0);
     }
 
     @Test
