@@ -3,63 +3,65 @@ package com.urise.webapp.storage;
 import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
-public class ListStorage extends AbstractStorage<ListStorageKey> {
-    private ArrayList<Resume> storage = new ArrayList<>();
+public class ListStorage extends AbstractStorage<Integer> {
+    private final List<Resume> storage = new ArrayList<>();
 
     @Override
-    protected ListStorageKey getSearchKey(String uuid) {
+    protected Integer getSearchKey(String uuid) {
         ListIterator<Resume> iterator = storage.listIterator();
         int index = 0;
         while (iterator.hasNext()) {
             Resume r = iterator.next();
             if (r.getUuid().equals(uuid)) {
-                return new ListStorageKey(index);
+                return index;
             }
             index++;
         }
-        return new ListStorageKey(-1);
+        return -1;
     }
 
     @Override
-    protected boolean isExist(ListStorageKey key) {
-        return key.index >= 0;
+    protected boolean getExistingSearchKey(Integer key) {
+       return key >= 0;
     }
 
     @Override
-    protected void doClear() {
+    protected boolean getNotExistingSearchKey(Integer key) {
+        return  key < 0;
+    }
+
+    @Override
+    public void clear() {
         storage.clear();
     }
 
     @Override
-    protected void doSave(ListStorageKey key, Resume resume) {
+    protected void doSave(Integer key, Resume resume) {
         storage.add(resume);
     }
 
     @Override
-    protected void doUpdate(ListStorageKey key, Resume resume) {
-        storage.set(key.index, resume);
+    protected void doUpdate(Integer key, Resume resume) {
+        storage.set(key, resume);
     }
 
     @Override
-    protected void doDelete(ListStorageKey key) {
-        storage.remove(key.index);
+    protected void doDelete(Integer key) {
+        storage.remove(key);
     }
 
     @Override
-    protected Resume doGet(ListStorageKey key) {
-        return storage.get(key.index);
+    protected Resume doGet(Integer key) {
+        return storage.get(key);
     }
 
-    @Override
-    protected Resume[] doGetAll() {
-        Resume list[] = new Resume[storage.size()];
-        list = storage.toArray(list);
-        return list;
+    public Resume[] getAll() {
+        return storage.toArray(new Resume[0]);
     }
-    @Override
-    protected int doSize() {
+    public int size() {
         return storage.size();
     }
 

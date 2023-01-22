@@ -4,12 +4,12 @@ import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 import java.util.Arrays;
 
-public class SortedArrayStorage extends AbstractArrayStorage{
+public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected ArrayStorageKey getSearchKey(String uuid) {
+    protected Integer getSearchKey(String uuid) {
         Resume searchKey = new Resume(uuid);
-        return new ArrayStorageKey(Arrays.binarySearch(storage, 0, resumeCount, searchKey));
+        return Arrays.binarySearch(storage, 0, resumeCount, searchKey);
     }
 
     @Override

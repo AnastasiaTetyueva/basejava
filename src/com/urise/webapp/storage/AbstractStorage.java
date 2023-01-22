@@ -4,15 +4,11 @@ import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
-public abstract class AbstractStorage<T extends Object> implements Storage {
-
-    public void clear() {
-        doClear();
-    }
+public abstract class AbstractStorage<T> implements Storage {
 
     public void save(Resume resume) {
         T key = getSearchKey(resume.getUuid());
-        if (isExist(key)) {
+        if (getExistingSearchKey(key)) {
             throw new ExistStorageException(resume.getUuid());
         }
         doSave(key, resume);
@@ -20,7 +16,7 @@ public abstract class AbstractStorage<T extends Object> implements Storage {
 
     public void update(Resume resume) {
         T key = getSearchKey(resume.getUuid());
-        if (!isExist(key)) {
+        if (getNotExistingSearchKey(key)) {
             throw new NotExistStorageException(resume.getUuid());
         }
         doUpdate(key, resume);
@@ -28,7 +24,7 @@ public abstract class AbstractStorage<T extends Object> implements Storage {
 
     public void delete(String uuid) {
         T key = getSearchKey(uuid);
-        if (!isExist(key)) {
+        if (getNotExistingSearchKey(key)) {
             throw new NotExistStorageException(uuid);
         }
         doDelete(key);
@@ -36,25 +32,17 @@ public abstract class AbstractStorage<T extends Object> implements Storage {
 
     public Resume get(String uuid) {
         T key = getSearchKey(uuid);
-        if (!isExist(key)) {
+        if (getNotExistingSearchKey(key)) {
             throw new NotExistStorageException(uuid);
         }
         return doGet(key);
     }
 
-    public Resume[] getAll() {
-        return doGetAll();
-    }
-
-    public int size() {
-        return doSize();
-    }
-
     protected abstract T getSearchKey(String uuid);
 
-    protected abstract boolean isExist(T key);
+    protected abstract boolean getExistingSearchKey(T key);
 
-    protected abstract void doClear();
+    protected abstract boolean getNotExistingSearchKey(T key);
 
     protected abstract void doSave(T key, Resume resume);
 
@@ -63,9 +51,5 @@ public abstract class AbstractStorage<T extends Object> implements Storage {
     protected abstract void doDelete(T key);
 
     protected abstract Resume doGet(T key);
-
-    protected abstract Resume[] doGetAll();
-
-    protected abstract int doSize();
 
 }
