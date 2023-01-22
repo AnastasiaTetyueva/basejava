@@ -4,52 +4,54 @@ import com.urise.webapp.model.Resume;
 
 import java.util.HashMap;
 
-public class MapStorage extends AbstractStorage<MapStorageKey> {
+public class MapStorage extends AbstractStorage<String> {
     private HashMap<String, Resume> storage = new HashMap();
 
     @Override
-    protected MapStorageKey getSearchKey(String uuid) {
-        return new MapStorageKey(uuid);
+    protected String getSearchKey(String uuid) {
+        return new String(uuid);
     }
 
     @Override
-    protected boolean isExist(MapStorageKey key) {
-        return storage.containsKey(key.key);
+    protected boolean getExistingSearchKey(String key) {
+        return storage.containsKey(key);
     }
 
     @Override
-    protected void doClear() {
+    protected boolean getNotExistingSearchKey(String key) {
+        return !storage.containsKey(key);
+    }
+
+    public void clear() {
         storage.clear();
     }
 
     @Override
-    protected void doSave(MapStorageKey key, Resume resume) {
-        storage.put(key.key, resume);
+    protected void doSave(String key, Resume resume) {
+        storage.put(key, resume);
     }
 
     @Override
-    protected void doUpdate(MapStorageKey key, Resume resume) {
-        storage.replace(key.key, resume);
+    protected void doUpdate(String key, Resume resume) {
+        storage.replace(key, resume);
     }
 
     @Override
-    protected void doDelete(MapStorageKey key) {
-        storage.remove(key.key);
+    protected void doDelete(String key) {
+        storage.remove(key);
     }
 
     @Override
-    protected Resume doGet(MapStorageKey key) {
-       return storage.get(key.key);
+    protected Resume doGet(String key) {
+       return storage.get(key);
     }
 
-    @Override
-    protected Resume[] doGetAll() {
+    public Resume[] getAll() {
         Resume list[] = new Resume[storage.size()];
         return storage.values().toArray(list);
     }
 
-    @Override
-    protected int doSize() {
+    public int size() {
         return storage.size();
     }
 }
