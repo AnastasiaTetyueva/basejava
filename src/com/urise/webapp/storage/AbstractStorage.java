@@ -8,41 +8,43 @@ public abstract class AbstractStorage<T> implements Storage {
 
     public void save(Resume resume) {
         T key = getSearchKey(resume.getUuid());
-        if (getExistingSearchKey(key)) {
-            throw new ExistStorageException(resume.getUuid());
-        }
+        getExistingSearchKey(key, resume.getUuid());
         doSave(key, resume);
     }
 
     public void update(Resume resume) {
         T key = getSearchKey(resume.getUuid());
-        if (getNotExistingSearchKey(key)) {
-            throw new NotExistStorageException(resume.getUuid());
-        }
+        getNotExistingSearchKey(key, resume.getUuid());
         doUpdate(key, resume);
     }
 
     public void delete(String uuid) {
         T key = getSearchKey(uuid);
-        if (getNotExistingSearchKey(key)) {
-            throw new NotExistStorageException(uuid);
-        }
+        getNotExistingSearchKey(key, uuid);
         doDelete(key);
     }
 
     public Resume get(String uuid) {
         T key = getSearchKey(uuid);
-        if (getNotExistingSearchKey(key)) {
+        getNotExistingSearchKey(key, uuid);
+        return doGet(key);
+    }
+
+    protected void getExistingSearchKey(T key, String uuid) {
+        if (isExist(key)) {
+            throw new ExistStorageException(uuid);
+        }
+    }
+
+    protected void getNotExistingSearchKey(T key, String uuid) {
+        if (!isExist(key)) {
             throw new NotExistStorageException(uuid);
         }
-        return doGet(key);
     }
 
     protected abstract T getSearchKey(String uuid);
 
-    protected abstract boolean getExistingSearchKey(T key);
-
-    protected abstract boolean getNotExistingSearchKey(T key);
+    protected abstract boolean isExist(T key);
 
     protected abstract void doSave(T key, Resume resume);
 

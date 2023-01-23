@@ -5,21 +5,16 @@ import com.urise.webapp.model.Resume;
 import java.util.HashMap;
 
 public class MapStorage extends AbstractStorage<String> {
-    private HashMap<String, Resume> storage = new HashMap();
+    private final HashMap<String, Resume> storage = new HashMap();
 
     @Override
     protected String getSearchKey(String uuid) {
-        return new String(uuid);
+        return uuid;
     }
 
     @Override
-    protected boolean getExistingSearchKey(String key) {
+    protected boolean isExist(String key) {
         return storage.containsKey(key);
-    }
-
-    @Override
-    protected boolean getNotExistingSearchKey(String key) {
-        return !storage.containsKey(key);
     }
 
     public void clear() {
@@ -47,8 +42,7 @@ public class MapStorage extends AbstractStorage<String> {
     }
 
     public Resume[] getAll() {
-        Resume list[] = new Resume[storage.size()];
-        return storage.values().toArray(list);
+        return storage.values().toArray(new Resume[0]);
     }
 
     public int size() {

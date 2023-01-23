@@ -15,13 +15,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
 
     @Override
-    protected boolean getExistingSearchKey(Integer key) {
+    protected boolean isExist(Integer key) {
         return key >= 0;
-    }
-
-    @Override
-    protected boolean getNotExistingSearchKey(Integer key) {
-        return key < 0;
     }
 
     public void clear() {
@@ -39,21 +34,21 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     @Override
     protected void doUpdate(Integer key, Resume resume) {
-        if (getExistingSearchKey(key)) {
+        if (isExist(key)) {
             replaceAt(resume, key);
         }
     }
 
     @Override
     protected void doDelete(Integer key) {
-        if (getExistingSearchKey(key)) {
+        if (isExist(key)) {
             deleteAt(key);
         }
     }
 
     @Override
     protected Resume doGet(Integer key) {
-        if (getExistingSearchKey(key)) {
+        if (isExist(key)) {
             return storage[key];
         }
         return null;
