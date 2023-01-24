@@ -7,39 +7,39 @@ import com.urise.webapp.model.Resume;
 public abstract class AbstractStorage<T> implements Storage {
 
     public void save(Resume resume) {
-        T key = getSearchKey(resume.getUuid());
-        getExistingSearchKey(key, resume.getUuid());
+        T key = getExistingSearchKey(resume.getUuid());
         doSave(key, resume);
     }
 
     public void update(Resume resume) {
-        T key = getSearchKey(resume.getUuid());
-        getNotExistingSearchKey(key, resume.getUuid());
+        T key = getNotExistingSearchKey(resume.getUuid());
         doUpdate(key, resume);
     }
 
     public void delete(String uuid) {
-        T key = getSearchKey(uuid);
-        getNotExistingSearchKey(key, uuid);
+        T key = getNotExistingSearchKey(uuid);
         doDelete(key);
     }
 
     public Resume get(String uuid) {
-        T key = getSearchKey(uuid);
-        getNotExistingSearchKey(key, uuid);
+        T key = getNotExistingSearchKey(uuid);
         return doGet(key);
     }
 
-    protected void getExistingSearchKey(T key, String uuid) {
+    protected T getExistingSearchKey(String uuid) {
+        T key = getSearchKey(uuid);
         if (isExist(key)) {
             throw new ExistStorageException(uuid);
         }
+        return key;
     }
 
-    protected void getNotExistingSearchKey(T key, String uuid) {
+    protected T getNotExistingSearchKey(String uuid) {
+        T key = getSearchKey(uuid);
         if (!isExist(key)) {
             throw new NotExistStorageException(uuid);
         }
+        return key;
     }
 
     protected abstract T getSearchKey(String uuid);
