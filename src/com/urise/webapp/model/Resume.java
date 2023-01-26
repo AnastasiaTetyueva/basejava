@@ -3,19 +3,29 @@
  */
 package com.urise.webapp.model;
 
+import java.util.Comparator;
 import java.util.UUID;
 
-public class Resume implements Comparable<Resume>{
+public class Resume {
 
     // Unique identifier
     private final String uuid;
 
+    private String fullName;
+
     public Resume() {
-        this(UUID.randomUUID().toString());
+        this.uuid = UUID.randomUUID().toString();
+        fullName = "";
+    }
+
+    public Resume(String uuid, String fullName) {
+        this.uuid = uuid;
+        this.fullName = fullName;
     }
 
     public Resume(String uuid) {
         this.uuid = uuid;
+        fullName = "";
     }
 
     @Override
@@ -36,13 +46,21 @@ public class Resume implements Comparable<Resume>{
         return uuid;
     }
 
-    @Override
-    public int compareTo(Resume o) {
-        return uuid.compareTo(o.uuid);
-    }
-
     public String getUuid() {
         return uuid;
     }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public static Comparator<Resume> getResumeComparator = (r1, r2) ->
+                (r1.getFullName().toUpperCase() == r2.getFullName().toUpperCase()) ? r1.getUuid().compareTo(r2.getUuid())
+                        : r1.getFullName().toUpperCase().compareTo(r2.getFullName().toUpperCase());
+
 
 }
