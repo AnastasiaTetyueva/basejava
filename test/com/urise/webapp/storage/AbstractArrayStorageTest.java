@@ -115,7 +115,7 @@ public abstract class AbstractArrayStorageTest {
         storage.clear();
         for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
             try {
-                storage.save(new Resume(Integer.toString(i)));
+                storage.save(new Resume(Integer.toString(i), "Сидоров"));
             } catch (Exception e) {
                 Assert.fail("Storage is not overflow!");
             }

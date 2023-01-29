@@ -14,18 +14,16 @@ public class Resume {
     private String fullName;
 
     public Resume() {
-        this.uuid = UUID.randomUUID().toString();
-        fullName = "";
+        this(UUID.randomUUID().toString(), "dummy");
+    }
+
+    public Resume(String fullName) {
+        this(UUID.randomUUID().toString(), fullName);
     }
 
     public Resume(String uuid, String fullName) {
         this.uuid = uuid;
         this.fullName = fullName;
-    }
-
-    public Resume(String uuid) {
-        this.uuid = uuid;
-        fullName = "";
     }
 
     @Override
@@ -59,7 +57,7 @@ public class Resume {
     }
 
     public static Comparator<Resume> getResumeComparator = (r1, r2) ->
-                (r1.getFullName().toUpperCase() == r2.getFullName().toUpperCase()) ? r1.getUuid().compareTo(r2.getUuid())
+                (r1.getFullName() != null || r2.getFullName() != null || r1.getFullName().toUpperCase() == r2.getFullName().toUpperCase()) ? r1.getUuid().compareTo(r2.getUuid())
                         : r1.getFullName().toUpperCase().compareTo(r2.getFullName().toUpperCase());
 
 

@@ -5,9 +5,10 @@ import com.urise.webapp.model.Resume;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MapStorage extends AbstractStorage<String> {
-    private final HashMap<String, Resume> storage = new HashMap<>();
+    private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
     protected String getSearchKey(String uuid) {
@@ -43,9 +44,10 @@ public class MapStorage extends AbstractStorage<String> {
        return storage.get(key);
     }
 
-    public List<Resume> getAllSorted() {
+    @Override
+    protected List<Resume> doCopyAll() {
         List<Resume> list = new ArrayList<Resume>(storage.values());
-        list.sort(Resume.getResumeComparator);
+        list.sort(RESUME_COMPARATOR);
         return list;
     }
 

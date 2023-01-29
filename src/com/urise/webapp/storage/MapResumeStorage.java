@@ -2,10 +2,13 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MapResumeStorage extends AbstractStorage<Resume> {
-    private final HashMap<String, Resume> storage = new HashMap<>();
+    private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
     protected Resume getSearchKey(String uuid) {
@@ -14,7 +17,7 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
 
     @Override
     protected boolean isExist(Resume key) {
-        return storage.containsKey(key.getUuid());
+        return key != null;
     }
 
     public void clear() {
@@ -23,7 +26,7 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
 
     @Override
     protected void doSave(Resume key, Resume resume) {
-        storage.put(key.getUuid(), resume);
+        storage.put(resume.getUuid(), resume);
     }
 
     @Override
@@ -33,17 +36,18 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
 
     @Override
     protected void doDelete(Resume key) {
-        storage.remove(key);
+        storage.remove(key.getUuid());
     }
 
     @Override
     protected Resume doGet(Resume key) {
-        return storage.get(key);
+        return storage.get(key.getUuid());
     }
 
-    public List<Resume> getAllSorted() {
+    @Override
+    protected List<Resume> doCopyAll() {
         List<Resume> list = new ArrayList<Resume>(storage.values());
-        list.sort(Resume.getResumeComparator);
+        list.sort(RESUME_COMPARATOR);
         return list;
     }
 
