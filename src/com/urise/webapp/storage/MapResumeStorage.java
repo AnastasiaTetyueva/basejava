@@ -47,7 +47,6 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     @Override
     protected List<Resume> doCopyAll() {
         List<Resume> list = new ArrayList<Resume>(storage.values());
-        list.sort(RESUME_COMPARATOR);
         return list;
     }
 

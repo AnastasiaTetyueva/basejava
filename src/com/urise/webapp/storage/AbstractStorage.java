@@ -32,7 +32,9 @@ public abstract class AbstractStorage<T> implements Storage {
     }
 
     public List<Resume> getAllSorted() {
-        return doCopyAll();
+        List<Resume> list = doCopyAll();
+        list.sort(RESUME_COMPARATOR);
+        return list;
     }
 
     protected T getExistingSearchKey(String uuid) {
