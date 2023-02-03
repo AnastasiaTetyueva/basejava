@@ -4,6 +4,7 @@
 package com.urise.webapp.model;
 
 import java.util.Comparator;
+import java.util.Map;
 import java.util.UUID;
 
 public class Resume {
@@ -12,6 +13,10 @@ public class Resume {
     private final String uuid;
 
     private String fullName;
+
+    private Map<SectionType, AbstractSection> sections;
+
+    private Map<ContactType, String> contacts;
 
     public Resume() {
         this(UUID.randomUUID().toString(), "dummy");
