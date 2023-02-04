@@ -36,4 +36,28 @@ public class Organization {
         this.website = website;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Organization organization = (Organization) o;
+        return name.equals(organization.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        String str = new String();
+        str.concat(this.name); str.concat("\n");
+        str.concat(this.website); str.concat("\n");
+        for (Period period : periods) {
+            str.concat(period.toString()); str.concat("\n");
+        }
+        return str;
+    }
+
 }

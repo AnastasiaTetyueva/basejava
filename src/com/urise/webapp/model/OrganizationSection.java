@@ -14,4 +14,25 @@ public class OrganizationSection extends AbstractSection {
     public OrganizationSection(List<Organization> organizations) {
         this.organizations = organizations;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (this == o);
+    }
+
+    @Override
+    public int hashCode() {
+        return organizations.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        String str = new String();
+        for (Organization organization : organizations) {
+            str.concat(organization.toString()); str.concat("\n");
+        }
+        return str;
+    }
+
+
 }

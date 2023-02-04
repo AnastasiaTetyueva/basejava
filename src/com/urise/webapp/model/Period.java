@@ -1,7 +1,7 @@
 package com.urise.webapp.model;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.Objects;
 
 public class Period {
     private LocalDate start;
@@ -38,4 +38,33 @@ public class Period {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Period period = (Period) o;
+        return (start.equals(period.start)) && (end.equals(period.end));
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.start);
+        hash = 29 * hash + Objects.hashCode(this.end);
+        hash = 29 * hash + Objects.hashCode(this.title);
+        hash = 29 * hash + Objects.hashCode(this.description);
+        return hash;
+    }
+
+    @Override
+    public String toString() {
+        String str = new String();
+        str.concat(this.start.toString()); str.concat("-");
+        str.concat(this.end.toString()); str.concat("  ");
+        str.concat(this.title); str.concat("\n");
+        str.concat(this.description); str.concat("\n");
+        return str;
+    }
+
 }
