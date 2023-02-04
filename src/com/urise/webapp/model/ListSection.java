@@ -14,4 +14,23 @@ public class ListSection extends AbstractSection {
         this.list = list;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return (this == o);
+    }
+
+    @Override
+    public int hashCode() {
+        return list.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        String str = new String();
+        for (String row : list) {
+            str.concat(row); str.concat("\n");
+        }
+        return str;
+    }
+
 }

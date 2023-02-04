@@ -2,6 +2,7 @@ package com.urise.webapp.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Organization {
     private String name;
@@ -40,13 +41,16 @@ public class Organization {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Organization organization = (Organization) o;
-        return name.equals(organization.name);
+        return this.hashCode() == o.hashCode();
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.name);
+        hash = 29 * hash + Objects.hashCode(this.website);
+        hash = 29 * hash + Objects.hashCode(this.periods);
+        return hash;
     }
 
     @Override

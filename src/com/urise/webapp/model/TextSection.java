@@ -25,8 +25,7 @@ public class TextSection extends AbstractSection {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        String content = (String) o;
-        return text.equals(content);
+        return this.hashCode() == o.hashCode();
     }
 
     @Override

@@ -44,7 +44,7 @@ public class Period {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Period period = (Period) o;
-        return (start.equals(period.start)) && (end.equals(period.end));
+        return this.hashCode() == o.hashCode();
     }
 
     @Override
