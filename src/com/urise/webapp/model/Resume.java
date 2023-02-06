@@ -4,6 +4,7 @@
 package com.urise.webapp.model;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,13 +23,19 @@ public class Resume {
         this(UUID.randomUUID().toString(), "dummy");
     }
 
-    public Resume(String fullName) {
-        this(UUID.randomUUID().toString(), fullName);
+    public Resume(String uuid) {
+        this.uuid = uuid;
     }
 
     public Resume(String uuid, String fullName) {
+        this(uuid, fullName, new HashMap<SectionType, AbstractSection>(), new HashMap<ContactType, String>());
+    }
+
+    public Resume(String uuid, String fullName, Map<SectionType, AbstractSection> sections, Map<ContactType, String> contacts) {
         this.uuid = uuid;
         this.fullName = fullName;
+        this.sections = sections;
+        this.contacts = contacts;
     }
 
     @Override
@@ -46,7 +53,21 @@ public class Resume {
 
     @Override
     public String toString() {
-        return uuid;
+        StringBuilder str = new StringBuilder();
+        str.append(this.fullName); str.append("\n");
+        str.append("\n");
+        for (ContactType contact : ContactType.values()) {
+            str.append(contact.getTitle()); str.append(": ");
+            str.append(contacts.get(contact)); str.append("\n");
+        }
+        str.append("\n");
+        for (SectionType type : SectionType.values()) {
+            str.append(type.getTitle());
+            str.append("\n");
+            str.append(sections.get(type));
+            str.append("\n\n");
+        }
+        return str.toString();
     }
 
     public String getUuid() {
@@ -59,6 +80,34 @@ public class Resume {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public AbstractSection getSection(SectionType type) {
+        return sections.get(type);
+    }
+
+    public String getSectionTitle(SectionType type) {
+        return type.getTitle();
+    }
+
+    public Map<SectionType, AbstractSection> getSections() {
+        return sections;
+    }
+
+    public void setSection(SectionType type, AbstractSection section) {
+        sections.put(type, section);
+    }
+
+    public String getContact(ContactType type) {
+        return contacts.get(type);
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public void setContact(ContactType type, String contact) {
+        contacts.put(type, contact);
     }
 
     public static Comparator<Resume> getResumeComparator = (r1, r2) ->

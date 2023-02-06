@@ -55,13 +55,13 @@ public class Organization {
 
     @Override
     public String toString() {
-        String str = new String();
-        str.concat(this.name); str.concat("\n");
-        str.concat(this.website); str.concat("\n");
+        StringBuilder str = new StringBuilder();
+        str.append(this.name); str.append("\n");
+        str.append(this.website); str.append("\n");
         for (Period period : periods) {
-            str.concat(period.toString()); str.concat("\n");
+            str.append(period.toString()); str.append("\n");
         }
-        return str;
+        return str.toString();
     }
 
 }

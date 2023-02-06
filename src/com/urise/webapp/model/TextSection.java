@@ -1,7 +1,5 @@
 package com.urise.webapp.model;
 
-import java.util.Objects;
-
 public class TextSection extends AbstractSection {
     private String text;
 
@@ -17,7 +15,7 @@ public class TextSection extends AbstractSection {
         return text;
     }
 
-    public void setText(String name) {
+    public void setText(String text) {
         this.text = text;
     }
 

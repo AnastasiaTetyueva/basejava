@@ -27,11 +27,11 @@ public class OrganizationSection extends AbstractSection {
 
     @Override
     public String toString() {
-        String str = new String();
+        StringBuilder str = new StringBuilder();
         for (Organization organization : organizations) {
-            str.concat(organization.toString()); str.concat("\n");
+            str.append(organization.toString()); str.append("\n");
         }
-        return str;
+        return str.toString();
     }
 
 

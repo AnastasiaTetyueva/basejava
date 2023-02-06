@@ -59,12 +59,12 @@ public class Period {
 
     @Override
     public String toString() {
-        String str = new String();
-        str.concat(this.start.toString()); str.concat("-");
-        str.concat(this.end.toString()); str.concat("  ");
-        str.concat(this.title); str.concat("\n");
-        str.concat(this.description); str.concat("\n");
-        return str;
+        StringBuilder str = new StringBuilder();
+        str.append(this.start.toString()); str.append("-");
+        str.append(this.end.toString()); str.append("  ");
+        str.append(this.title); str.append("\n");
+        str.append(this.description); str.append("\n");
+        return str.toString();
     }
 
 }
