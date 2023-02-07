@@ -5,14 +5,10 @@ import java.util.List;
 
 public class OrganizationSection extends AbstractSection {
 
-    private List<Organization> organizations;
+    private final List<Organization> organizations = new ArrayList<Organization>();
 
-    public OrganizationSection() {
-        this(new ArrayList<Organization>());
-    }
-
-    public OrganizationSection(List<Organization> organizations) {
-        this.organizations = organizations;
+    public List<Organization> getOrganizations() {
+        return organizations;
     }
 
     @Override

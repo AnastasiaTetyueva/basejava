@@ -13,7 +13,7 @@ public class Period {
     private String description;
 
     public Period() {
-        this(LocalDate.now(), LocalDate.now(), "", "");
+        this(null, null, "", "");
     }
 
     public Period(LocalDate start, LocalDate end, String title, String description) {
@@ -60,7 +60,7 @@ public class Period {
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
-        str.append(this.start.toString()); str.append("-");
+        str.append(this.start.toString()); str.append(" -- ");
         str.append(this.end.toString()); str.append("  ");
         str.append(this.title); str.append("\n");
         str.append(this.description); str.append("\n");

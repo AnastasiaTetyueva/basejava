@@ -26,54 +26,82 @@ public class ResumeTestData {
         RESUME.setSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. " +
                 "Пурист кода и архитектуры."));
 
-        List<String> achievementList = new ArrayList<>();
+        // Achievements
+        ListSection achievments = new ListSection();
+        List<String> achievementList = achievments.getList();
         achievementList.add("Организация команды и успешная реализация Java проектов для сторонних заказчиков.");
-        achievementList.add("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\"");
+        achievementList.add("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\".");
         achievementList.add("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike.");
-        RESUME.setSection(SectionType.ACHIEVEMENT, new ListSection(achievementList));
+        RESUME.setSection(SectionType.ACHIEVEMENT, achievments);
 
-        List<String> qualificationList = new ArrayList<>();
-        qualificationList.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
-        qualificationList.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
-        qualificationList.add("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy");
-        RESUME.setSection(SectionType.QUALIFICATIONS, new ListSection(qualificationList));
+        // Qualification
+        ListSection qualifications = new ListSection();
+        List<String> qualificationList = qualifications.getList();
+        qualificationList.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2.");
+        qualificationList.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce.");
+        qualificationList.add("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy.");
+        RESUME.setSection(SectionType.QUALIFICATIONS, qualifications);
 
-        List<Period> periodListEx1 = new ArrayList<>();
+        // Experience
+        OrganizationSection experience = new OrganizationSection();
+        List<Organization> experienceList = experience.getOrganizations();
+
+        Organization organizationEx1 = new Organization();
+        organizationEx1.setName("Java Online Projects");
+        organizationEx1.setWebsite("http://javaops.ru/");
+        List<Period> periodListEx1 = organizationEx1.getPeriods();
         Period periodEx1 = new Period(LocalDate.of(2013, 10, 01), LocalDate.now(), "Автор проекта",
                 "Создание, организация и проведение Java онлайн проектов и стажировок.");
         periodListEx1.add(periodEx1);
+        experienceList.add(organizationEx1);
 
-        List<Period> periodListEx2 = new ArrayList<>();
+        Organization organizationEx2 = new Organization();
+        organizationEx2.setName("Wrike");
+        organizationEx2.setWebsite("https://www.wrike.com/");
+        List<Period> periodListEx2 = organizationEx2.getPeriods();
         Period periodEx2 = new Period(LocalDate.of(2014, 10, 01), LocalDate.of(2016, 01, 01 ),
                 "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike " +
                 "(Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis).");
         periodListEx2.add(periodEx2);
+        experienceList.add(organizationEx2);
 
-        List<Organization> organizationListEx = new ArrayList<>();
-        Organization organizationEx1 = new Organization("Java Online Projects", "http://javaops.ru/", periodListEx1);
-        Organization organizationEx2 = new Organization("Wrike", "https://www.wrike.com/", periodListEx2);
-        organizationListEx.add(organizationEx1);
-        organizationListEx.add(organizationEx2);
+        RESUME.setSection(SectionType.EXPERIENCE, experience);
 
-        RESUME.setSection(SectionType.EXPERIENCE, new OrganizationSection(organizationListEx));
+        // Education
+        OrganizationSection education = new OrganizationSection();
+        List<Organization> educationList = education.getOrganizations();
 
-        List<Period> periodListEd1 = new ArrayList<>();
+        Organization organizationEd1 = new Organization();
+        organizationEd1.setName("Coursera");
+        organizationEd1.setWebsite("https://www.coursera.org/course/progfun");
+        List<Period> periodListEd1 = organizationEd1.getPeriods();
         Period periodEd1 = new Period(LocalDate.of(2013, 03, 01), LocalDate.of(2013, 05, 01), "",
-                        "'Functional Programming Principles in Scala' by Martin Odersky");
+                "'Functional Programming Principles in Scala' by Martin Odersky");
         periodListEd1.add(periodEd1);
+        educationList.add(organizationEd1);
 
-        List<Period> periodListEd2 = new ArrayList<>();
+        Organization organizationEd2 = new Organization();
+        organizationEd2.setName("Luxoft");
+        organizationEd2.setWebsite("http://www.luxoft-training.ru/training/catalog/course.html?ID=22366");
+        List<Period> periodListEd2 = organizationEd2.getPeriods();
         Period periodEd2 = new Period(LocalDate.of(2011, 03, 01), LocalDate.of(2011, 04, 01), "",
                 "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML'");
-        periodListEd1.add(periodEd2);
+        periodListEd2.add(periodEd2);
+        educationList.add(organizationEd2);
 
-        List<Organization> organizationListEd = new ArrayList<>();
-        Organization organizationEd1 = new Organization("Coursera", "https://www.coursera.org/course/progfun", periodListEd1);
-        Organization organizationEd2 = new Organization("Luxoft", "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366", periodListEd2);
-        organizationListEd.add(organizationEd1);
-        organizationListEd.add(organizationEd2);
+        Organization organizationEd3 = new Organization();
+        organizationEd3.setName("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики");
+        organizationEd3.setWebsite("http://www.ifmo.ru/");
+        List<Period> periodListEd3 = organizationEd3.getPeriods();
+        Period periodEd3Second = new Period(LocalDate.of(1993, 9, 01), LocalDate.of(1996, 07, 01), "",
+                "Аспирантура (программист С, С++)");
+        periodListEd3.add(periodEd3Second);
+        Period periodEd3First = new Period(LocalDate.of(1987, 9, 01), LocalDate.of(1993, 07, 01), "",
+                "Инженер (программист Fortran, C)");
+        periodListEd3.add(periodEd3First);
+        educationList.add(organizationEd3);
 
-        RESUME.setSection(SectionType.EDUCATION, new OrganizationSection(organizationListEd));
+        RESUME.setSection(SectionType.EDUCATION, education);
 
         System.out.println(RESUME.toString());
     }

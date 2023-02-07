@@ -9,16 +9,13 @@ public class Organization {
 
     private String website;
 
-    List<Period> periods;
+    private final List<Period> periods = new ArrayList<Period>();
 
-    public Organization() {
-        this("", "", new ArrayList<Period>());
+    public Organization () {
+
     }
-
-    public Organization(String name, String website, List<Period> periods) {
-        this.name = name;
-        this.website = website;
-        this.periods = periods;
+    public List<Period> getPeriods() {
+        return periods;
     }
 
     public String getName() {

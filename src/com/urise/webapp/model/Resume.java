@@ -20,7 +20,7 @@ public class Resume {
     private Map<ContactType, String> contacts;
 
     public Resume() {
-        this(UUID.randomUUID().toString(), "dummy");
+        this(UUID.randomUUID().toString(), "");
     }
 
     public Resume(String uuid) {
