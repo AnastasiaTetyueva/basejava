@@ -10,10 +10,10 @@ import java.util.Objects;
 
 public class MainFile {
     public static void main(String[] args) {
-        String filePath = ".\\.gitignore";
+    /*    String filePath = ".\\.gitignore";
 
         File file = new File(filePath);
-        /*
+
         try {
             System.out.println(file.getCanonicalPath());
         } catch (IOException e) {
@@ -33,8 +33,8 @@ public class MainFile {
             System.out.println(fis.read());
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } */
-
+        }
+    */
         walkTree(new File("/Users/nastya/Desktop/java/basejava/src/com/urise/webapp"));
 
     }
