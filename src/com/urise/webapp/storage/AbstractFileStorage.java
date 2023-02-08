@@ -5,11 +5,12 @@ import com.urise.webapp.model.Resume;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
-    private File directory;
+    private final File directory;
 
     protected AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory must not be null");
@@ -20,11 +21,6 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
-    }
-
-    @Override
-    protected List<Resume> doCopyAll() {
-        return null;
     }
 
     @Override
@@ -40,8 +36,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void doSave(File file, Resume resume) {
         try {
-            file.createNewFile();
-            doWrite(file, resume);
+            if (file.createNewFile()) {
+                doWrite(file, resume);
+            }
         } catch (IOException e) {
             throw new StorageException("IO error", file.getName(), e);
         }
@@ -62,21 +59,42 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doDelete(File file) {
-
+        if (file.delete()) {
+            System.out.println(file.getName() + " deleted");
+        } else {
+            System.out.println(file.getName() + " not deleted");
+        }
     }
 
     @Override
     protected Resume doGet(File file) {
-        return doRead(directory);
+        return doRead(file);
     }
 
     @Override
     public void clear() {
-
+        for (File file: Objects.requireNonNull(directory.listFiles())) {
+            if (file.delete()) {
+                System.out.println(file.getName() + " deleted");
+            } else {
+                System.out.println(file.getName() + " not deleted");
+            }
+        }
     }
 
     @Override
     public int size() {
-        return 0;
+        File[] files = directory.listFiles();
+        return Objects.requireNonNull(files).length;
     }
+
+    @Override
+    protected List<Resume> doCopyAll() {
+        List<Resume> list = new ArrayList<>();
+        for (File file: Objects.requireNonNull(directory.listFiles())) {
+            list.add(doGet(file));
+        }
+        return list;
+    }
+
 }

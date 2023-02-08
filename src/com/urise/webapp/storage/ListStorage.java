@@ -55,7 +55,6 @@ public class ListStorage extends AbstractStorage<Integer> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        storage.sort(RESUME_COMPARATOR);
         return storage;
     }
 
