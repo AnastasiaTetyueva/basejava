@@ -1,7 +1,7 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.ResumeTestData;
 import com.urise.webapp.exception.StorageException;
-import com.urise.webapp.model.Resume;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,11 +16,11 @@ public class AbstractArrayStorageTest extends AbstractStorageTest {
         storage.clear();
         for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
             try {
-                storage.save(new Resume(Integer.toString(i), "Сидоров"));
+                storage.save(ResumeTestData.createResume(Integer.toString(i), "Сидоров".concat(Integer.toString(i))));
             } catch (Exception e) {
                 Assert.fail("Storage is not overflow!");
             }
         }
-        storage.save(new Resume(UUID_NOT_EXIST));
+        storage.save(ResumeTestData.createResume(UUID_NOT_EXIST, "Dummy"));
     }
 }
