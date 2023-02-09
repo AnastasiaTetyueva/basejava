@@ -12,11 +12,6 @@ public class OrganizationSection extends AbstractSection {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return (this == o);
-    }
-
-    @Override
     public int hashCode() {
         return organizations.hashCode();
     }
