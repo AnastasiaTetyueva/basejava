@@ -9,7 +9,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+
 public abstract class AbstractStorageTest {
+    protected static final File STORAGE_DIR = new File("/Users/nastya/Desktop/java/basejava/src/com/urise/webapp/storage");
     protected final Storage storage;
 
     public AbstractStorageTest(Storage storage) {

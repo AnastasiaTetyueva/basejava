@@ -1,6 +1,8 @@
 package com.urise.webapp.model;
 
-public class AbstractSection {
+import java.io.Serializable;
+
+public class AbstractSection implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

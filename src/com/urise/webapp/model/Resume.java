@@ -3,13 +3,14 @@
  */
 package com.urise.webapp.model;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class Resume {
-
+public class Resume implements Serializable {
+    private static final long serialVersionUID = 1L;
     // Unique identifier
     private final String uuid;
 
