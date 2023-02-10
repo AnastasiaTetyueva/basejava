@@ -60,9 +60,9 @@ public abstract class AbstractStorageTest {
     public void getAllSorted() throws Exception {
         Resume[] list = storage.getAllSorted().toArray(new Resume[0]);
         assertSize(3);
-        Assert.assertSame(list[0], RESUME_2);
-        Assert.assertSame(list[1], RESUME_3);
-        Assert.assertSame(list[2], RESUME_1);
+        Assert.assertTrue(list[0].equals(RESUME_2));
+        Assert.assertTrue(list[1].equals(RESUME_3));
+        Assert.assertTrue(list[2].equals(RESUME_1));
     }
 
     @Test
@@ -82,7 +82,7 @@ public abstract class AbstractStorageTest {
     @Test
     public void update() throws Exception {
         storage.update(RESUME_5);
-        Assert.assertSame(storage.get(UUID1), RESUME_5);
+        Assert.assertTrue(storage.get(UUID1).equals(RESUME_5));
     }
 
     @Test(expected = NotExistStorageException.class)

@@ -39,7 +39,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
                 doWrite(new BufferedOutputStream(new FileOutputStream(file)), resume);
             }
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("Couldn't create file " + file.getAbsolutePath(), file.getName(), e);
         }
     }
 
@@ -48,16 +48,14 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             doWrite(new BufferedOutputStream(new FileOutputStream(file)), resume);
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("File write error", resume.getUuid(), e);
         }
     }
 
     @Override
     protected void doDelete(File file) {
-        if (file.delete()) {
-            System.out.println(file.getName() + " deleted");
-        } else {
-            System.out.println(file.getName() + " not deleted");
+        if (!file.delete()) {
+            throw new StorageException("File delete error", file.getName());
         }
     }
 
