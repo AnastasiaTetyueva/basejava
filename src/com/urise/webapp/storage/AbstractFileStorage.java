@@ -39,7 +39,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
                 doWrite(new BufferedOutputStream(new FileOutputStream(file)), resume);
             }
         } catch (IOException e) {
-            throw new StorageException("Couldn't create file " + file.getAbsolutePath(), file.getName(), e);
+            throw new StorageException("File write error", file.getName(), e);
         }
     }
 
@@ -48,7 +48,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             doWrite(new BufferedOutputStream(new FileOutputStream(file)), resume);
         } catch (IOException e) {
-            throw new StorageException("File write error", resume.getUuid(), e);
+            throw new StorageException("File write error", file.getName(), e);
         }
     }
 
@@ -70,28 +70,34 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        for (File file: Objects.requireNonNull(directory.listFiles())) {
-            if (file.delete()) {
-                System.out.println(file.getName() + " deleted");
-            } else {
-                System.out.println(file.getName() + " not deleted");
-            }
+        File[] files = listIsNotNull();
+        for (File file: files) {
+            doDelete(file);
         }
     }
 
     @Override
     public int size() {
-        File[] files = directory.listFiles();
-        return Objects.requireNonNull(files).length;
+        File[] files = listIsNotNull();
+        return files.length;
     }
 
     @Override
     protected List<Resume> doCopyAll() {
-        List<Resume> list = new ArrayList<>();
-        for (File file: Objects.requireNonNull(directory.listFiles())) {
+        File[] files = listIsNotNull();
+        List<Resume> list = new ArrayList<>(files.length);
+        for (File file : files) {
             list.add(doGet(file));
         }
         return list;
+    }
+
+    private File[] listIsNotNull() {
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("Directory read error", null);
+        }
+        return files;
     }
 
     protected abstract void doWrite(OutputStream outputStream, Resume resume) throws IOException;
