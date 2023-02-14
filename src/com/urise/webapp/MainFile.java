@@ -35,24 +35,8 @@ public class MainFile {
             throw new RuntimeException(e);
         }
     */
-       // walkTree(new File("/Users/nastya/Desktop/java/basejava/src/com/urise/webapp"));
         walkTree1(new File("/Users/nastya/Desktop/java/basejava/src/com/urise/webapp"), "");
     }
-/*
-    public static void walkTree(File dir) {
-        if (dir.isDirectory()) {
-            File[] files = dir.listFiles();
-            List<File> list = Arrays.asList(Objects.requireNonNull(files));
-            list.sort(Comparator.comparing(File::isDirectory));
-            for (File file: list) {
-                if (file.isHidden()) { continue; }
-                System.out.printf(file.isDirectory() ? "FOLDER: %s \n" : "%s \n", file.getName(), "\n");
-                if (file.isDirectory()) {
-                    walkTree(file);
-                }
-            }
-        }
-    } */
 
     public static void walkTree1(File dir, String indentation) {
         if (dir.isDirectory()) {
@@ -61,7 +45,7 @@ public class MainFile {
             list.sort(Comparator.comparing(File::isDirectory));
             for (File file: list) {
                 if (file.isHidden()) { continue; }
-                System.out.printf(indentation);
+                System.out.print(indentation);
                 System.out.printf(file.isDirectory() ? "+ %s \n" : "  %s \n", file.getName(), "\n");
                 if (file.isDirectory()) {
                     walkTree1(file, indentation.concat("    "));
