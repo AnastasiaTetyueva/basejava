@@ -2,8 +2,8 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.serializer.ResumeSerializer;
-import com.urise.webapp.serializer.Serializer;
+import com.urise.webapp.storage.serializer.ObjectStreamSerializer;
+import com.urise.webapp.storage.serializer.Serializer;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
 
-    private final Serializer serializer = new ResumeSerializer();
+    private final Serializer serializer = new ObjectStreamSerializer();
 
     private void doWrite(BufferedOutputStream bufferedOutputStream, Resume resume) throws IOException {
         serializer.doWrite(bufferedOutputStream, resume);
@@ -51,7 +51,7 @@ public class PathStorage extends AbstractStorage<Path> {
             Path file = Files.createFile(path);
             doWrite(new BufferedOutputStream(Files.newOutputStream(file)), resume);
         } catch (IOException e) {
-            throw new StorageException("Couldn't create file ", String.valueOf(path.getFileName()), e);
+            throw new StorageException("Couldn't create file", String.valueOf(path.getFileName()), e);
         }
     }
 
@@ -87,7 +87,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.list(directory).forEach(this::doDelete);
         } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
+            throw new StorageException("Path delete error", null, e);
         }
     }
 
