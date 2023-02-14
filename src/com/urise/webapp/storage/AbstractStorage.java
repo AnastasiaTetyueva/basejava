@@ -2,8 +2,10 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -39,9 +41,14 @@ public abstract class AbstractStorage<T> implements Storage {
 
     public List<Resume> getAllSorted() {
         LOG.info("getAllSorted");
-        List<Resume> list = doCopyAll();
-        list.sort(RESUME_COMPARATOR);
-        return list;
+        List<Resume> list = null;
+        try {
+            list = doCopyAll();
+            list.sort(RESUME_COMPARATOR);
+            return list;
+        } catch (IOException e) {
+            throw new StorageException("File reading error", null, e);
+        }
     }
 
     protected T getExistingSearchKey(String uuid) {
@@ -62,7 +69,7 @@ public abstract class AbstractStorage<T> implements Storage {
         return key;
     }
 
-    protected abstract List<Resume> doCopyAll();
+    protected abstract List<Resume> doCopyAll() throws IOException;
 
     protected abstract T getSearchKey(String uuid);
 

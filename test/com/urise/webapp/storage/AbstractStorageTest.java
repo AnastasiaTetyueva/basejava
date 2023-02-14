@@ -10,9 +10,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.file.Path;
 
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = new File("/Users/nastya/Desktop/java/basejava/storage");
+
+    protected static final Path STORAGE_DIR_PATH = STORAGE_DIR.toPath();
+
     protected final Storage storage;
 
     public AbstractStorageTest(Storage storage) {
