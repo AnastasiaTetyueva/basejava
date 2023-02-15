@@ -40,7 +40,7 @@ public class FileStorage extends AbstractStorage<File> {
     protected void doSave(File file, Resume resume) {
         try {
             if (file.createNewFile()) {
-                serializer.doWrite(new BufferedOutputStream(new FileOutputStream(file)), resume);
+                System.out.println("File created: " + file.getName());
             }
         } catch (IOException e) {
             throw new StorageException("File write error", file.getName(), e);

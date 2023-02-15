@@ -40,8 +40,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected void doSave(Path path, Resume resume) {
         try {
-            Path file = Files.createFile(path);
-            serializer.doWrite(new BufferedOutputStream(Files.newOutputStream(file)), resume);
+            Files.createFile(path);
         } catch (IOException e) {
             throw new StorageException("Couldn't create file", getFileName(path), e);
         }
