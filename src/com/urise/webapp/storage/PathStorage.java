@@ -43,8 +43,9 @@ public class PathStorage extends AbstractStorage<Path> {
             Path file = Files.createFile(path);
             serializer.doWrite(new BufferedOutputStream(Files.newOutputStream(file)), resume);
         } catch (IOException e) {
-            throw new StorageException("Couldn't create file", String.valueOf(path.getFileName()), e);
+            throw new StorageException("Couldn't create file", getFileName(path), e);
         }
+        doUpdate(path, resume);
     }
 
     @Override
@@ -70,39 +71,35 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             return serializer.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("Path read error", String.valueOf(path), e);
+            throw new StorageException("Path read error", getFileName(path), e);
         }
     }
 
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach(this::doDelete);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null, e);
-        }
+        getFileList().forEach(this::doDelete);
     }
 
     @Override
     public int size() {
-        String[] list = directory.toFile().list();
-        if (list == null) {
-            throw new StorageException("Directory read error", null);
-        }
-        return list.length;
+        return (int) getFileList().count();
     }
 
     @Override
     protected List<Resume> doCopyAll() {
-        try {
-            Stream<Path> files = Files.list(directory);
-            return files.map(this::doGet)
-                    .collect(Collectors.toList());
+        return getFileList().map(this::doGet).collect(Collectors.toList());
+    }
 
+    private Stream<Path> getFileList() {
+        try {
+            return Files.list(directory);
         } catch (IOException e) {
             throw new StorageException("Parse file error", null, e);
         }
+    }
 
+    private String getFileName(Path path) {
+        return path.getFileName().toString();
     }
 
 }
