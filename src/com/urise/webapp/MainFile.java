@@ -35,10 +35,10 @@ public class MainFile {
             throw new RuntimeException(e);
         }
     */
-        walkTree1(new File("/Users/nastya/Desktop/java/basejava/src/com/urise/webapp"), "");
+        walkTree(new File("/Users/nastya/Desktop/java/basejava/src/com/urise/webapp"), "");
     }
 
-    public static void walkTree1(File dir, String indentation) {
+    public static void walkTree(File dir, String indentation) {
         if (dir.isDirectory()) {
             File[] files = dir.listFiles();
             List<File> list = Arrays.asList(Objects.requireNonNull(files));
@@ -48,7 +48,7 @@ public class MainFile {
                 System.out.print(indentation);
                 System.out.printf(file.isDirectory() ? "+ %s \n" : "  %s \n", file.getName(), "\n");
                 if (file.isDirectory()) {
-                    walkTree1(file, indentation.concat("    "));
+                    walkTree(file, indentation.concat("    "));
                 }
             }
         }
