@@ -8,6 +8,8 @@ public class OrganizationSection extends AbstractSection {
 
     private final List<Organization> organizations = new ArrayList<Organization>();
 
+    public OrganizationSection() {}
+
     public List<Organization> getOrganizations() {
         return organizations;
     }

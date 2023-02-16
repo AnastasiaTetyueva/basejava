@@ -8,6 +8,9 @@ public class ListSection extends AbstractSection {
 
     private final List<String> list = new ArrayList<String>();
 
+    public ListSection() {
+    }
+
     public List<String> getList() {
         return list;
     }
