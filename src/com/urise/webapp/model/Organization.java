@@ -2,7 +2,7 @@ package com.urise.webapp.model;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,7 +17,7 @@ public class Organization implements Serializable {
 
     private final List<Period> periods = new ArrayList<Period>();
 
-    public Organization () {
+    public Organization() {
     }
 
     public List<Period> getPeriods() {
@@ -65,6 +65,28 @@ public class Organization implements Serializable {
             str.append(period.toString()); str.append("\n");
         }
         return str.toString();
+    }
+
+    public void doWriteData(DataOutputStream outputStream) throws IOException {
+        outputStream.writeUTF(getName());
+        outputStream.writeUTF(getWebsite());
+        outputStream.writeInt(getPeriods().size());
+        for (Period period : getPeriods()) {
+            period.doWriteData(outputStream);
+        }
+    }
+
+    public static Organization doReadData(DataInputStream inputStream) throws IOException {
+        Organization result = new Organization();
+        String name = inputStream.readUTF();
+        String website = inputStream.readUTF();
+        result.setName(name);
+        result.setWebsite(website);
+        int size = inputStream.readInt();
+        for(int i = 0; i < size; i++) {
+            result.getPeriods().add(Period.doReadData(inputStream));
+        }
+        return result;
     }
 
 }

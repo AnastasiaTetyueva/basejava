@@ -1,5 +1,7 @@
 package com.urise.webapp.model;
 
+import java.io.*;
+
 public class TextSection extends AbstractSection {
     private static final long serialVersionUID = 1L;
 
@@ -29,5 +31,16 @@ public class TextSection extends AbstractSection {
     @Override
     public String toString() {
         return text;
+    }
+
+    @Override
+    public void doWriteData(DataOutputStream outputStream) throws IOException {
+        outputStream.writeUTF(getText());
+    }
+
+    public static TextSection doReadData(DataInputStream inputStream) throws IOException {
+        TextSection result = new TextSection();
+        result.setText(inputStream.readUTF());
+        return result;
     }
 }

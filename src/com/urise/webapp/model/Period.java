@@ -6,18 +6,19 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import java.io.Serializable;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Period implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
-    private LocalDate start;
+    private final LocalDate start;
 
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
-    private LocalDate end;
+    private final LocalDate end;
 
     private String title;
 
@@ -76,6 +77,37 @@ public class Period implements Serializable {
         str.append(this.title); str.append("\n");
         str.append(this.description); str.append("\n");
         return str.toString();
+    }
+
+    public void doWriteData(DataOutputStream outputStream) throws IOException {
+        System.out.printf("YEAR: ", "%d", start.getYear());
+        System.out.printf("MONTH: ", "%d", start.getMonthValue());
+        System.out.printf("DAY: ", "%d", start.getDayOfMonth());
+        outputStream.writeInt(start.getYear());
+        outputStream.writeInt(start.getMonthValue());
+        outputStream.writeInt(start.getDayOfMonth());
+        outputStream.writeInt(end.getYear());
+        outputStream.writeInt(end.getMonthValue());
+        outputStream.writeInt(end.getDayOfMonth());
+        outputStream.writeUTF(getTitle());
+        outputStream.writeUTF(getDescription());
+    }
+
+    public static Period doReadData(DataInputStream inputStream) throws IOException {
+        int startYear = inputStream.readInt();
+        int startMonth = inputStream.readInt();
+        int startDay = inputStream.readInt();
+        LocalDate startDate = LocalDate.of(startYear, startMonth, startDay);
+
+        int endYear = inputStream.readInt();
+        int endMonth = inputStream.readInt();
+        int endDay = inputStream.readInt();
+        LocalDate endDate = LocalDate.of(endYear, endMonth, endDay);
+
+        String title = inputStream.readUTF();
+        String description = inputStream.readUTF();
+
+        return new Period(startDate, endDate, title, description);
     }
 
 }

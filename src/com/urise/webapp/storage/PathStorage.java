@@ -7,7 +7,6 @@ import com.urise.webapp.storage.serializer.Serializer;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -19,7 +18,7 @@ public class PathStorage extends AbstractStorage<Path> {
     private final Serializer serializer;
 
     protected PathStorage(Path dir, Serializer serializer) {
-        directory = Paths.get(String.valueOf(dir));
+        directory = dir;
         this.serializer = serializer;
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {

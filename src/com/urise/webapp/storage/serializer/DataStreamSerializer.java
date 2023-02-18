@@ -1,7 +1,6 @@
 package com.urise.webapp.storage.serializer;
 
-import com.urise.webapp.model.ContactType;
-import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.*;
 
 import java.io.*;
 import java.util.Map;
@@ -12,13 +11,21 @@ public class DataStreamSerializer implements Serializer {
         try (DataOutputStream dos = new DataOutputStream(outputStream)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
+
             Map<ContactType, String> contacts = resume.getContacts();
             dos.writeInt(contacts.size());
             for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
             }
-            // TODO implements sections
+
+            Map<SectionType, AbstractSection> sections = resume.getSections();
+            dos.writeInt(sections.size());
+            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet())  {
+                String title = entry.getKey().name();
+                dos.writeUTF(title);
+                entry.getValue().doWriteData(dos);
+            }
         }
     }
 
@@ -28,11 +35,31 @@ public class DataStreamSerializer implements Serializer {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
+
+            int contactSize = dis.readInt();
+            for (int i = 0; i < contactSize; i++) {
                 resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
-            // TODO implements sections
+
+            int sectionSize = dis.readInt();
+            for (int i = 0; i < sectionSize; i++) {
+                SectionType type = SectionType.valueOf(dis.readUTF());
+                switch (type) {
+                    case OBJECTIVE:
+                    case PERSONAL:
+                        resume.setSection(type, TextSection.doReadData(dis));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        resume.setSection(type, ListSection.doReadData(dis));
+                        break;
+                    case EXPERIENCE:
+                    case EDUCATION:
+                        resume.setSection(type, OrganizationSection.doReadData(dis));
+                    break;
+                    default: break;
+                }
+            }
             return resume;
         }
     }
