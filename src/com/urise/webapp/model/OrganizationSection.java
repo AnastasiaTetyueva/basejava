@@ -1,6 +1,5 @@
 package com.urise.webapp.model;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,23 +27,5 @@ public class OrganizationSection extends AbstractSection {
         }
         return str.toString();
     }
-
-    @Override
-    public void doWriteData(DataOutputStream outputStream) throws IOException {
-        outputStream.writeInt(getOrganizations().size());
-        for (Organization row : getOrganizations()) {
-            row.doWriteData(outputStream);
-        }
-    }
-
-    public static OrganizationSection doReadData(DataInputStream inputStream) throws IOException {
-        int size = inputStream.readInt();
-        OrganizationSection result = new OrganizationSection();
-        for (int i = 0; i < size; i++) {
-            result.getOrganizations().add(Organization.doReadData(inputStream));
-        }
-        return result;
-    }
-
 
 }

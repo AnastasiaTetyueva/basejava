@@ -67,26 +67,4 @@ public class Organization implements Serializable {
         return str.toString();
     }
 
-    public void doWriteData(DataOutputStream outputStream) throws IOException {
-        outputStream.writeUTF(getName());
-        outputStream.writeUTF(getWebsite());
-        outputStream.writeInt(getPeriods().size());
-        for (Period period : getPeriods()) {
-            period.doWriteData(outputStream);
-        }
-    }
-
-    public static Organization doReadData(DataInputStream inputStream) throws IOException {
-        Organization result = new Organization();
-        String name = inputStream.readUTF();
-        String website = inputStream.readUTF();
-        result.setName(name);
-        result.setWebsite(website);
-        int size = inputStream.readInt();
-        for(int i = 0; i < size; i++) {
-            result.getPeriods().add(Period.doReadData(inputStream));
-        }
-        return result;
-    }
-
 }

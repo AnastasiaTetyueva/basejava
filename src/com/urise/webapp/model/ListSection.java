@@ -1,6 +1,5 @@
 package com.urise.webapp.model;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,24 +27,6 @@ public class ListSection extends AbstractSection {
             str.append(row); str.append("\n");
         }
         return str.toString();
-    }
-
-    @Override
-    public void doWriteData(DataOutputStream outputStream) throws IOException {
-        outputStream.writeInt(getList().size());
-        for (String row : getList()) {
-            outputStream.writeUTF(row);
-        }
-    }
-
-    public static ListSection doReadData(DataInputStream inputStream) throws IOException {
-        int size = inputStream.readInt();
-        ListSection result = new ListSection();
-        for (int i = 0; i < size; i++) {
-            String row = inputStream.readUTF();
-            result.getList().add(row);
-        }
-        return result;
     }
 
 }
