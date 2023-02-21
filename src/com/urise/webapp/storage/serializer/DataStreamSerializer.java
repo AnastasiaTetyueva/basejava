@@ -27,7 +27,7 @@ public class DataStreamSerializer implements Serializer {
             for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet())  {
                 String title = entry.getKey().name();
                 dos.writeUTF(title);
-                doWriteData(entry.getValue(), dos);
+                doWriteSectionData(entry.getValue(), entry.getKey(), dos);
             }
         }
     }
@@ -67,21 +67,22 @@ public class DataStreamSerializer implements Serializer {
         }
     }
 
-    public void doWriteData(Object object, DataOutputStream outputStream) throws IOException {
-        if (object instanceof ListSection) {
-            doWriteData_listSection((ListSection) object, outputStream);
-        }
-        if (object instanceof Organization) {
-            doWriteData_Organization((Organization) object, outputStream);
-        }
-        if (object instanceof OrganizationSection) {
-            doWriteData_OrganizationSection((OrganizationSection) object, outputStream);
-        }
-        if (object instanceof Period) {
-            doWriteData_Period((Period) object, outputStream);
-        }
-        if (object instanceof TextSection) {
-            doWriteData_TextSection((TextSection) object, outputStream);
+    public void doWriteSectionData(AbstractSection section, SectionType type, DataOutputStream outputStream) throws IOException {
+        switch (type) {
+            case OBJECTIVE:
+            case PERSONAL:
+                doWriteData_TextSection((TextSection) section, outputStream);
+                break;
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                doWriteData_listSection((ListSection) section, outputStream);
+                break;
+            case EXPERIENCE:
+            case EDUCATION:
+                doWriteData_OrganizationSection((OrganizationSection) section, outputStream);
+                break;
+            default:
+                break;
         }
     }
 
@@ -146,42 +147,43 @@ public class DataStreamSerializer implements Serializer {
     // Period
     public void doWriteData_Period(Period object, DataOutputStream outputStream) throws IOException {
         LocalDate st = Objects.requireNonNull(object.getStart(), "Start of period must not be null");
-        outputStream.writeInt(st.getYear());
-        outputStream.writeInt(st.getMonthValue());
-        outputStream.writeInt(st.getDayOfMonth());
-        if (object.getEnd() == null) {
-            outputStream.writeInt(0);
-            outputStream.writeInt(0);
-            outputStream.writeInt(0);
-        } else {
-            outputStream.writeInt(object.getEnd().getYear());
-            outputStream.writeInt(object.getEnd().getMonthValue());
-            outputStream.writeInt(object.getEnd().getDayOfMonth());
-        }
+        writeData_Date(st, outputStream);
+        writeData_Date(object.getEnd(), outputStream);
         outputStream.writeUTF(Objects.requireNonNull(object.getTitle(), "Title must be null"));
         outputStream.writeUTF(object.getDescription());
     }
 
-    public static Period doReadData_Period(DataInputStream inputStream) throws IOException {
-        int startYear = inputStream.readInt();
-        int startMonth = inputStream.readInt();
-        int startDay = inputStream.readInt();
-        LocalDate startDate = LocalDate.of(startYear, startMonth, startDay);
-
-        int endYear = inputStream.readInt();
-        int endMonth = inputStream.readInt();
-        int endDay = inputStream.readInt();
-        LocalDate endDate;
-        if (endYear == 0 && endMonth == 0 && endDay == 0) {
-            endDate = null;
+    private void writeData_Date(LocalDate date, DataOutputStream outputStream) throws IOException {
+        if (date == null) {
+            outputStream.writeInt(0);
+            outputStream.writeInt(0);
+            outputStream.writeInt(0);
         } else {
-            endDate = LocalDate.of(endYear, endMonth, endDay);
+            outputStream.writeInt(date.getYear());
+            outputStream.writeInt(date.getMonthValue());
+            outputStream.writeInt(date.getDayOfMonth());
         }
+    }
+
+    public static Period doReadData_Period(DataInputStream inputStream) throws IOException {
+        LocalDate start = readData_Date(inputStream);
+        LocalDate end = readData_Date(inputStream);
 
         String title = inputStream.readUTF();
         String description = inputStream.readUTF();
 
-        return new Period(startDate, endDate, title, description);
+        return new Period(start, end, title, description);
+    }
+
+    private static LocalDate readData_Date(DataInputStream inputStream) throws IOException {
+        int year = inputStream.readInt();
+        int month = inputStream.readInt();
+        int day = inputStream.readInt();
+        if (year == 0 && month == 0 && day == 0) {
+            return null;
+        } else {
+            return LocalDate.of(year, month, day);
+        }
     }
 
     // TextSection
