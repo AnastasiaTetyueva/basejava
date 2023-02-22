@@ -18,6 +18,11 @@ public class Organization implements Serializable {
     private final List<Period> periods = new ArrayList<Period>();
 
     public Organization() {
+        this("");
+    }
+
+    public Organization(String name) {
+        this.name = Objects.requireNonNull(name);
     }
 
     public List<Period> getPeriods() {
