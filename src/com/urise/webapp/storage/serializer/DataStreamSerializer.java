@@ -17,7 +17,7 @@ public class DataStreamSerializer implements Serializer {
 
             Map<ContactType, String> contacts = resume.getContacts();
             dos.writeInt(contacts.size());
-            writeContactsWithException((Collection) contacts, dos);
+            writeContactsWithException(contacts.entrySet(), dos);
 
             Map<SectionType, AbstractSection> sections = resume.getSections();
             dos.writeInt(sections.size());
