@@ -4,6 +4,7 @@ import com.urise.webapp.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
@@ -16,10 +17,7 @@ public class DataStreamSerializer implements Serializer {
 
             Map<ContactType, String> contacts = resume.getContacts();
             dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-                dos.writeUTF(entry.getKey().name());
-                dos.writeUTF(entry.getValue());
-            }
+            writeContactsWithException((Collection) contacts, dos);
 
             Map<SectionType, AbstractSection> sections = resume.getSections();
             dos.writeInt(sections.size());
@@ -30,6 +28,14 @@ public class DataStreamSerializer implements Serializer {
                 doWriteSectionData(entry.getValue(), entry.getKey(), dos);
             }
         }
+    }
+
+    private void writeContactsWithException(Collection collection, DataOutputStream outputStream) throws IOException {
+        final ThrowingConsumer<Map.Entry<ContactType, String>> consumer = elem -> {
+            outputStream.writeUTF(String.valueOf(elem.getKey()));
+            outputStream.writeUTF(elem.getValue());
+        };
+        collection.forEach(consumer);
     }
 
     @Override

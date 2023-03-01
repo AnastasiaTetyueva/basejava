@@ -25,14 +25,14 @@ public class Period implements Serializable {
     private String description;
 
     public Period() {
-        this(LocalDate.now(), null, "", "");
+        this(LocalDate.now(), LocalDate.of(3000, 1, 1), "", "");
     }
 
     public Period(LocalDate start, LocalDate end, String title, String description) {
         this.start = Objects.requireNonNull(start);
-        this.end = end;
+        this.end = Objects.requireNonNull(end);
         this.title = Objects.requireNonNull(title);
-        this.description = Objects.requireNonNull(description);
+        this.description = description;
     }
 
     public LocalDate getStart() { return start; }
