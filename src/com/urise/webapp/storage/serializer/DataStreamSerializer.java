@@ -15,27 +15,28 @@ public class DataStreamSerializer implements Serializer {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
 
+        // contacts
             Map<ContactType, String> contacts = resume.getContacts();
-            dos.writeInt(contacts.size());
-            writeContactsWithException(contacts.entrySet(), dos);
+            writeWithException(contacts.entrySet(), dos, elem -> {
+                dos.writeUTF(String.valueOf(elem.getKey()));
+                dos.writeUTF(elem.getValue());
+            });
 
+        // sections
             Map<SectionType, AbstractSection> sections = resume.getSections();
-            dos.writeInt(sections.size());
-
-            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet())  {
-                String title = entry.getKey().name();
+            writeWithException(sections.entrySet(), dos, elem -> {
+                String title = elem.getKey().name();
                 dos.writeUTF(title);
-                doWriteSectionData(entry.getValue(), entry.getKey(), dos);
-            }
+                doWriteSectionData(elem.getValue(), elem.getKey(), dos);
+            });
         }
     }
 
-    private void writeContactsWithException(Collection collection, DataOutputStream outputStream) throws IOException {
-        final ThrowingConsumer<Map.Entry<ContactType, String>> consumer = elem -> {
-            outputStream.writeUTF(String.valueOf(elem.getKey()));
-            outputStream.writeUTF(elem.getValue());
-        };
-        collection.forEach(consumer);
+    private <T> void writeWithException(Collection<T> collection, DataOutputStream outputStream, ThrowingConsumer<T> consumer) throws IOException {
+         outputStream.writeInt(collection.size());
+        for (T entry : collection) {
+            consumer.accept(entry);
+        }
     }
 
     @Override
@@ -77,15 +78,28 @@ public class DataStreamSerializer implements Serializer {
         switch (type) {
             case OBJECTIVE:
             case PERSONAL:
-                doWriteData_TextSection((TextSection) section, outputStream);
+                TextSection objectT = (TextSection) section;
+                outputStream.writeUTF(objectT.getText() == null ? "" : objectT.getText());
                 break;
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                doWriteData_listSection((ListSection) section, outputStream);
+                ListSection objectL = (ListSection) section;
+                writeWithException(objectL.getList(), outputStream, outputStream::writeUTF);
                 break;
             case EXPERIENCE:
             case EDUCATION:
-                doWriteData_OrganizationSection((OrganizationSection) section, outputStream);
+                OrganizationSection objectO = (OrganizationSection) section;
+                writeWithException(objectO.getOrganizations(), outputStream, elem -> {
+                    outputStream.writeUTF(Objects.requireNonNull(elem.getName(), "Name must not be null"));
+                    outputStream.writeUTF(elem.getWebsite() == null ? "" : elem.getWebsite());
+                    writeWithException(elem.getPeriods(), outputStream, period -> {
+                        LocalDate st = Objects.requireNonNull(period.getStart(), "Start of period must not be null");
+                        writeDate(st, outputStream);
+                        writeDate(period.getEnd(), outputStream);
+                        outputStream.writeUTF(Objects.requireNonNull(period.getTitle(), "Title must be null"));
+                        outputStream.writeUTF(period.getDescription());
+                    });
+                });
                 break;
             default:
                 break;
@@ -93,13 +107,6 @@ public class DataStreamSerializer implements Serializer {
     }
 
     // ListSection
-    public void doWriteData_listSection(ListSection object, DataOutputStream outputStream) throws IOException {
-        outputStream.writeInt(object.getList() == null ? 0 : object.getList().size());
-        for (String row : object.getList()) {
-            outputStream.writeUTF(row);
-        }
-    }
-
     public static ListSection doReadData_listSection(DataInputStream inputStream) throws IOException {
         int size = inputStream.readInt();
         ListSection result = new ListSection();
@@ -111,15 +118,6 @@ public class DataStreamSerializer implements Serializer {
     }
 
     // Organization
-    public void doWriteData_Organization(Organization object, DataOutputStream outputStream) throws IOException {
-        outputStream.writeUTF(Objects.requireNonNull(object.getName(), "Name must not be null"));
-        outputStream.writeUTF(object.getWebsite() == null ? "" : object.getWebsite());
-        outputStream.writeInt(Objects.requireNonNull(object.getPeriods(), "Periods must not be null").size());
-        for (Period period : object.getPeriods()) {
-            doWriteData_Period(period, outputStream);
-        }
-    }
-
     public static Organization doReadData_Organization(DataInputStream inputStream) throws IOException {
         Organization result = new Organization();
         String name = inputStream.readUTF();
@@ -134,13 +132,6 @@ public class DataStreamSerializer implements Serializer {
     }
 
     // OrganizationSection
-    public void doWriteData_OrganizationSection(OrganizationSection object, DataOutputStream outputStream) throws IOException {
-        outputStream.writeInt(object.getOrganizations() == null ? 0 : object.getOrganizations().size());
-        for (Organization row : object.getOrganizations()) {
-            doWriteData_Organization(row, outputStream);
-        }
-    }
-
     public static OrganizationSection doReadData_OrganizationSection(DataInputStream inputStream) throws IOException {
         int size = inputStream.readInt();
         OrganizationSection result = new OrganizationSection();
@@ -151,15 +142,7 @@ public class DataStreamSerializer implements Serializer {
     }
 
     // Period
-    public void doWriteData_Period(Period object, DataOutputStream outputStream) throws IOException {
-        LocalDate st = Objects.requireNonNull(object.getStart(), "Start of period must not be null");
-        writeData_Date(st, outputStream);
-        writeData_Date(object.getEnd(), outputStream);
-        outputStream.writeUTF(Objects.requireNonNull(object.getTitle(), "Title must be null"));
-        outputStream.writeUTF(object.getDescription());
-    }
-
-    private void writeData_Date(LocalDate date, DataOutputStream outputStream) throws IOException {
+    private void writeDate(LocalDate date, DataOutputStream outputStream) throws IOException {
         if (date == null) {
             outputStream.writeInt(0);
             outputStream.writeInt(0);
@@ -172,8 +155,8 @@ public class DataStreamSerializer implements Serializer {
     }
 
     public static Period doReadData_Period(DataInputStream inputStream) throws IOException {
-        LocalDate start = readData_Date(inputStream);
-        LocalDate end = readData_Date(inputStream);
+        LocalDate start = readDate(inputStream);
+        LocalDate end = readDate(inputStream);
 
         String title = inputStream.readUTF();
         String description = inputStream.readUTF();
@@ -181,7 +164,7 @@ public class DataStreamSerializer implements Serializer {
         return new Period(start, end, title, description);
     }
 
-    private static LocalDate readData_Date(DataInputStream inputStream) throws IOException {
+    private static LocalDate readDate(DataInputStream inputStream) throws IOException {
         int year = inputStream.readInt();
         int month = inputStream.readInt();
         int day = inputStream.readInt();
@@ -193,10 +176,6 @@ public class DataStreamSerializer implements Serializer {
     }
 
     // TextSection
-    public void doWriteData_TextSection(TextSection object, DataOutputStream outputStream) throws IOException {
-        outputStream.writeUTF(object.getText() == null ? "" : object.getText());
-    }
-
     public static TextSection doReadData_TextSection(DataInputStream inputStream) throws IOException {
         TextSection result = new TextSection();
         result.setText(inputStream.readUTF());
