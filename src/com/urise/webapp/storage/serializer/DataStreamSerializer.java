@@ -4,9 +4,7 @@ import com.urise.webapp.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class DataStreamSerializer implements Serializer {
     @Override
@@ -36,41 +34,6 @@ public class DataStreamSerializer implements Serializer {
          outputStream.writeInt(collection.size());
         for (T entry : collection) {
             consumer.accept(entry);
-        }
-    }
-
-    @Override
-    public Resume doRead(InputStream inputStream) throws IOException {
-        try (DataInputStream dis = new DataInputStream(inputStream)) {
-            String uuid = dis.readUTF();
-            String fullName = dis.readUTF();
-            Resume resume = new Resume(uuid, fullName);
-
-            int contactSize = dis.readInt();
-            for (int i = 0; i < contactSize; i++) {
-                resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
-
-            int sectionSize = dis.readInt();
-            for (int i = 0; i < sectionSize; i++) {
-                SectionType type = SectionType.valueOf(dis.readUTF());
-                switch (type) {
-                    case OBJECTIVE:
-                    case PERSONAL:
-                        resume.setSection(type, doReadData_TextSection(dis));
-                        break;
-                    case ACHIEVEMENT:
-                    case QUALIFICATIONS:
-                        resume.setSection(type, doReadData_listSection(dis));
-                        break;
-                    case EXPERIENCE:
-                    case EDUCATION:
-                        resume.setSection(type, doReadData_OrganizationSection(dis));
-                    break;
-                    default: break;
-                }
-            }
-            return resume;
         }
     }
 
@@ -106,42 +69,6 @@ public class DataStreamSerializer implements Serializer {
         }
     }
 
-    // ListSection
-    public static ListSection doReadData_listSection(DataInputStream inputStream) throws IOException {
-        int size = inputStream.readInt();
-        ListSection result = new ListSection();
-        for (int i = 0; i < size; i++) {
-            String row = inputStream.readUTF();
-            result.getList().add(row);
-        }
-        return result;
-    }
-
-    // Organization
-    public static Organization doReadData_Organization(DataInputStream inputStream) throws IOException {
-        Organization result = new Organization();
-        String name = inputStream.readUTF();
-        String website = inputStream.readUTF();
-        result.setName(name);
-        result.setWebsite(website);
-        int size = inputStream.readInt();
-        for(int i = 0; i < size; i++) {
-            result.getPeriods().add(doReadData_Period(inputStream));
-        }
-        return result;
-    }
-
-    // OrganizationSection
-    public static OrganizationSection doReadData_OrganizationSection(DataInputStream inputStream) throws IOException {
-        int size = inputStream.readInt();
-        OrganizationSection result = new OrganizationSection();
-        for (int i = 0; i < size; i++) {
-            result.getOrganizations().add(doReadData_Organization(inputStream));
-        }
-        return result;
-    }
-
-    // Period
     private void writeDate(LocalDate date, DataOutputStream outputStream) throws IOException {
         if (date == null) {
             outputStream.writeInt(0);
@@ -154,14 +81,72 @@ public class DataStreamSerializer implements Serializer {
         }
     }
 
-    public static Period doReadData_Period(DataInputStream inputStream) throws IOException {
-        LocalDate start = readDate(inputStream);
-        LocalDate end = readDate(inputStream);
 
-        String title = inputStream.readUTF();
-        String description = inputStream.readUTF();
+    @Override
+    public Resume doRead(InputStream inputStream) throws IOException {
+        try (DataInputStream dis = new DataInputStream(inputStream)) {
+            String uuid = dis.readUTF();
+            String fullName = dis.readUTF();
+            Resume resume = new Resume(uuid, fullName);
 
-        return new Period(start, end, title, description);
+        // contacts
+            List<AbstractMap.SimpleEntry<ContactType, String>> collectionC = new ArrayList<>();
+            readWithException(collectionC, dis, () -> new AbstractMap.SimpleEntry<>(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+
+            for (AbstractMap.SimpleEntry<ContactType, String> entry : collectionC) {
+                resume.setContact(entry.getKey(), entry.getValue());
+            }
+
+        // sections
+            List<AbstractMap.SimpleEntry<SectionType, AbstractSection>> collectionS = new ArrayList<>();
+            readWithException(collectionS, dis, () -> {
+                SectionType type = SectionType.valueOf(dis.readUTF());
+                switch (type) {
+                    case OBJECTIVE:
+                    case PERSONAL:
+                        TextSection resultT = new TextSection();
+                        resultT.setText(dis.readUTF());
+                        return new AbstractMap.SimpleEntry<>(type, resultT);
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        ListSection resultL = new ListSection();
+                        readWithException(resultL.getList(), dis, dis::readUTF);
+                        return new AbstractMap.SimpleEntry<>(type, resultL);
+                    case EXPERIENCE:
+                    case EDUCATION:
+                        OrganizationSection resultO = new OrganizationSection();
+                        readWithException(resultO.getOrganizations(), dis, () -> {
+                            Organization result = new Organization();
+                            String name = dis.readUTF();
+                            String website = dis.readUTF();
+                            result.setName(name);
+                            result.setWebsite(website);
+                            readWithException(result.getPeriods(), dis, () -> {
+                                LocalDate start = readDate(dis);
+                                LocalDate end = readDate(dis);
+                                String title = dis.readUTF();
+                                String description = dis.readUTF();
+                                return new Period(start, end, title, description);
+                            });
+                            return result;
+                        });
+                        return new AbstractMap.SimpleEntry<>(type, resultO);
+                    default: break;
+                }
+                return null;
+            });
+            for (AbstractMap.SimpleEntry<SectionType, AbstractSection> entry : collectionS) {
+                resume.setSection(entry.getKey(), entry.getValue());
+            }
+            return resume;
+        }
+    }
+
+    private <T> void readWithException(Collection<T> collection, DataInputStream inputStream, ThrowingSupplier<T> supplier) throws IOException {
+        int size = inputStream.readInt();
+        for (int i = 0; i < size; i++) {
+            collection.add(supplier.get());
+        }
     }
 
     private static LocalDate readDate(DataInputStream inputStream) throws IOException {
@@ -174,13 +159,5 @@ public class DataStreamSerializer implements Serializer {
             return LocalDate.of(year, month, day);
         }
     }
-
-    // TextSection
-    public static TextSection doReadData_TextSection(DataInputStream inputStream) throws IOException {
-        TextSection result = new TextSection();
-        result.setText(inputStream.readUTF());
-        return result;
-    }
-
 
 }
