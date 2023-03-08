@@ -4,7 +4,6 @@ import com.urise.webapp.ResumeTestData;
 import com.urise.webapp.model.Resume;
 
 public class DeadlockTest {
-    static final SortedArrayStorage ARRAY_STORAGE = new SortedArrayStorage();
 
     public static void main(String[] args) {
         Resume r1 = ResumeTestData.createResume("uuid1", "Петров Петр");
