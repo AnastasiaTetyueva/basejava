@@ -9,38 +9,32 @@ public class DeadlockTest {
         Resume r1 = ResumeTestData.createResume("uuid1", "Петров Петр");
         Resume r2 = ResumeTestData.createResume("uuid2", "Иванов Иван");
 
-        Thread thread1 = new Thread(() -> {
+        Thread thread1 = doThread(r1, r2, "Сергей");
+        Thread thread2 = doThread(r2, r1, "Георгий");
+
+        thread1.start();
+        thread2.start();
+    }
+
+    private static Thread doThread(Resume x, Resume y, String name) {
+        Thread thread = new Thread(() -> {
             System.out.println(Thread.currentThread().getName() + " start");
-            synchronized (r1) {
+            synchronized (x) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                r1.setFullName("Иванов Петр");
-                System.out.println(r1.getFullName());
 
-                synchronized (r2) {
-                    System.out.println(r1.equals(r2));
+                x.setFullName(name);
+                System.out.println(x.getFullName());
+                synchronized (y) {
+                    x.equals(y);
                 }
             }
             System.out.println(Thread.currentThread().getName() + " end");
-        }, "Thread1");
-
-        Thread thread2 = new Thread(() -> {
-            System.out.println(Thread.currentThread().getName() + " start");
-            synchronized (r2) {
-                r2.setFullName("Петров Иван");
-                System.out.println(r2.getFullName());
-                synchronized (r1) {
-                    r2.equals(r1);
-                }
-            }
-            System.out.println(Thread.currentThread().getName() + " start");
-        }, "Thread2");
-
-        thread1.start();
-        thread2.start();
+        });
+        return thread;
     }
 
 }
