@@ -17,7 +17,7 @@ public class DeadlockTest {
     }
 
     private static Thread doThread(Resume x, Resume y, String name) {
-        Thread thread = new Thread(() -> {
+        return new Thread(() -> {
             System.out.println(Thread.currentThread().getName() + " start");
             synchronized (x) {
                 try {
@@ -34,7 +34,6 @@ public class DeadlockTest {
             }
             System.out.println(Thread.currentThread().getName() + " end");
         });
-        return thread;
     }
 
 }
