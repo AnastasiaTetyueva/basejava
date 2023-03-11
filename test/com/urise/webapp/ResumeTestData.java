@@ -102,12 +102,12 @@ public class ResumeTestData {
 
         RESUME.setSection(SectionType.EDUCATION, education);
 
-        System.out.println(RESUME.toString());
+        System.out.println(RESUME.toString()); */
     }
 
      public static Resume createResume(String uuid, String fulLName) {
         Resume RESUME = new Resume(uuid, fulLName);
-
+/*
         RESUME.setContact(ContactType.PHONE, "+7(921) 855-0482");
         RESUME.setContact(ContactType.SKYPE, "skype:grigory.kislin");
         RESUME.setContact(ContactType.EMAIL, "gkislin@yandex.ru");
@@ -174,9 +174,9 @@ public class ResumeTestData {
         periodListEd3.add(periodEd3First);
         educationList.add(organizationEd3);
         RESUME.setSection(SectionType.EDUCATION, education);
-
+*/
         return RESUME;
 
- */
+
     }
 }

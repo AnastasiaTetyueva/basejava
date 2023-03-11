@@ -23,6 +23,6 @@ public class MainStreams {
                     ?  integers.stream().filter(x -> x % 2 != 0)
                     :  integers.stream().filter(x -> x % 2 == 0))
                 .collect(Collectors.toList());
-
     }
+
 }
