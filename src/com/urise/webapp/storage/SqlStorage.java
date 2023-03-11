@@ -6,6 +6,7 @@ import com.urise.webapp.model.Resume;
 import com.urise.webapp.sql.ConnectionFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SqlStorage implements Storage {
@@ -27,7 +28,14 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume r) {
-
+        try (Connection conn = connectionFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name=? WHERE UUID=?")) {
+            ps.setString(2, r.getUuid());
+            ps.setString(1, r.getFullName());
+            ps.execute();
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 
     @Override
@@ -59,16 +67,42 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-
+        try (Connection conn = connectionFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement("DELETE FROM resume uuid WHERE uuid =?")) {
+            ps.setString(1, uuid);
+            ps.execute();
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 
     @Override
     public List<Resume> getAllSorted() {
-        return null;
+        try (Connection conn = connectionFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume ORDER BY full_name")) {
+            List<Resume> list = new ArrayList<>();
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
+            }
+            return list;
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 
     @Override
     public int size() {
-        return 0;
+        try (Connection conn = connectionFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM resume")) {
+            int records = 0;
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                records = rs.getInt(1);
+            }
+            return records;
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
     }
 }
