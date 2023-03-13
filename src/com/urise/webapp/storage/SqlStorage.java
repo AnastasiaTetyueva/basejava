@@ -54,7 +54,7 @@ public class SqlStorage<sqlHelper> implements Storage {
             }
             new Resume(uuid, rs.getString("full_name"));
         });
-        return ;
+        //return ;
 
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r WHERE r.uuid =?")) {
