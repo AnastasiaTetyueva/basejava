@@ -7,6 +7,7 @@ import com.urise.webapp.storage.Storage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
 
 /**
  * Interactive test for ArrayStorage implementation
@@ -15,7 +16,7 @@ import java.io.InputStreamReader;
 public class MainArray {
     private final static Storage ARRAY_STORAGE = new SortedArrayStorage();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SQLException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Resume r;
         while (true) {
@@ -66,7 +67,7 @@ public class MainArray {
         }
     }
 
-    static void printAll() {
+    static void printAll() throws SQLException {
         Resume[] all = ARRAY_STORAGE.getAllSorted().toArray(new Resume[0]);
         System.out.println("----------------------------");
         if (all.length == 0) {

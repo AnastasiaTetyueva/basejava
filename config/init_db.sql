@@ -6,7 +6,7 @@ create table public.resume
     full_name text not null
 );
 
-alter table public.resume owner to postgres;
+alter table public.resume owner to resumes;
 
 create table public.contact
 (
@@ -21,7 +21,7 @@ create table public.contact
             on update restrict on delete cascade
 );
 
-alter table public.contact owner to postgres;
+alter table public.contact owner to resumes;
 
 create unique index contact_uuid_type_index
 	on contact (resume_uuid, type);
