@@ -13,12 +13,12 @@ public class Config {
     private static final File PROPS = new File("config/resumes.properties");
     private static final Config INSTANCE = new Config();
 
-    public Storage storage;
-    Properties props = new Properties();
+    private final Storage storage;
     private final File storageDir;
 
     public Config() {
         try (InputStream is = new FileInputStream(PROPS)) {
+            Properties props = new Properties();
             props.load(is);
             storageDir = new File(props.getProperty("storage.dir"));
             String dbUrl = props.getProperty("db.url");
@@ -36,5 +36,6 @@ public class Config {
     public File getStorageDir() {
         return storageDir;
     }
+    public Storage getStorage() { return storage; }
 
 }
