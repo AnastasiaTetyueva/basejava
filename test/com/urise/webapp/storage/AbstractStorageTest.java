@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.UUID;
 
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
@@ -24,10 +25,10 @@ public abstract class AbstractStorageTest {
         this.storage = storage;
     }
 
-    protected static final String UUID1 = "uuid1";
-    protected static final String UUID2 = "uuid2";
-    protected static final String UUID3 = "uuid3";
-    protected static final String UUID4 = "uuid4";
+    protected static final String UUID1 = UUID.randomUUID().toString();
+    protected static final String UUID2 = UUID.randomUUID().toString();
+    protected static final String UUID3 = UUID.randomUUID().toString();
+    protected static final String UUID4 = UUID.randomUUID().toString();
     protected static final String UUID_NOT_EXIST = "dummy";
 
     protected static final String name1 = "Петров Петр";

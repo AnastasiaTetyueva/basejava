@@ -18,9 +18,9 @@ public class Resume implements Serializable {
 
     private String fullName;
 
-    private Map<SectionType, AbstractSection> sections;
+    private final Map<SectionType, AbstractSection> sections;
 
-    private Map<ContactType, String> contacts;
+    private final Map<ContactType, String> contacts;
 
     public Resume() {
         this(UUID.randomUUID().toString(), "");

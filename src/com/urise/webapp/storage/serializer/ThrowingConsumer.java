@@ -10,8 +10,8 @@ public interface ThrowingConsumer<T> extends Consumer<T> {
     default void accept(T elem) {
         try {
             acceptThrows(elem);
-        } catch (final Exception e) {
-            throw new StorageException("", (String) elem, e);
+        } catch (Exception e) {
+            throw new StorageException(e);
         }
     }
 
