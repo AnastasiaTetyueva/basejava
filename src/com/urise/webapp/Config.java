@@ -33,9 +33,13 @@ public class Config {
     public static Config get() {
         return INSTANCE;
     }
+
     public File getStorageDir() {
         return storageDir;
     }
-    public Storage getStorage() { return storage; }
+
+    public Storage getStorage() {
+        return storage;
+    }
 
 }
