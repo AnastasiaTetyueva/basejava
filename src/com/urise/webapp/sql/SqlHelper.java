@@ -25,12 +25,11 @@ public class SqlHelper {
     }
 
     private StorageException addException(SQLException e) {
-        PSQLException psqlException = (PSQLException) e.getCause();
+        PSQLException psqlException = (PSQLException) e;
         if (psqlException.getSQLState().equals("23505")) {
             throw new ExistStorageException(null);
-        } else {
-            throw new StorageException("", "", e);
         }
+        return new StorageException(e);
     }
 
 }
