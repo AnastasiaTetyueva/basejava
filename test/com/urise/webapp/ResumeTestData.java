@@ -10,7 +10,7 @@ public class ResumeTestData {
     public static void main(String[] args) {
         Resume RESUME = new Resume();
         RESUME.setFullName("Григорий Кислин");
-/*
+
         RESUME.setContact(ContactType.PHONE, "+7(921) 855-0482");
         RESUME.setContact(ContactType.SKYPE, "skype:grigory.kislin");
         RESUME.setContact(ContactType.EMAIL, "gkislin@yandex.ru");
@@ -18,7 +18,7 @@ public class ResumeTestData {
         RESUME.setContact(ContactType.GITHUB, "https://github.com/gkislin");
         RESUME.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         RESUME.setContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
-
+/*
         RESUME.setSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения " +
                 "по Java Web и Enterprise технологиям."));
 
@@ -107,7 +107,7 @@ public class ResumeTestData {
 
      public static Resume createResume(String uuid, String fulLName) {
         Resume RESUME = new Resume(uuid, fulLName);
-/*
+
         RESUME.setContact(ContactType.PHONE, "+7(921) 855-0482");
         RESUME.setContact(ContactType.SKYPE, "skype:grigory.kislin");
         RESUME.setContact(ContactType.EMAIL, "gkislin@yandex.ru");
@@ -115,7 +115,7 @@ public class ResumeTestData {
         RESUME.setContact(ContactType.GITHUB, "https://github.com/gkislin");
         RESUME.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         RESUME.setContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
-
+/*
         RESUME.setSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения " +
                 "по Java Web и Enterprise технологиям."));
 
