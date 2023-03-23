@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
@@ -64,11 +64,11 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAllSorted() throws Exception {
-        Resume[] list = storage.getAllSorted().toArray(new Resume[0]);
+        List<Resume> list = storage.getAllSorted();
         assertSize(3);
-        Assert.assertEquals(list[0], RESUME_2);
-        Assert.assertEquals(list[1], RESUME_3);
-        Assert.assertEquals(list[2], RESUME_1);
+        List<Resume> l = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        l.sort(AbstractStorage.RESUME_COMPARATOR);
+        Assert.assertEquals(list, l);
     }
 
     @Test
