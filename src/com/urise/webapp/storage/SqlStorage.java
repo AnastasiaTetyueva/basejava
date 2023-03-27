@@ -1,6 +1,7 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.sql.SqlHelper;
@@ -33,7 +34,8 @@ public class SqlStorage<sqlHelper> implements Storage {
                             throw new NotExistStorageException(r.getUuid());
                         }
                     }
-                    addSqlContact(conn,"update", r);
+                    deleteContact(conn, r);
+                    addSqlContact(conn, r);
                     return null;
                 }
         );
@@ -47,7 +49,7 @@ public class SqlStorage<sqlHelper> implements Storage {
                         ps.setString(2, r.getFullName());
                         ps.execute();
                     }
-                    addSqlContact(conn,"save", r);
+                    addSqlContact(conn, r);
                     return null;
                 }
         );
@@ -121,15 +123,9 @@ public class SqlStorage<sqlHelper> implements Storage {
         }
     }
 
-    private void addSqlContact(Connection conn, String command, Resume r) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement(
-                (command.equals("save")) ?
-                        "INSERT INTO contact (value, type, resume_uuid) " +
-                                "VALUES (?,?,?)" :
-                        "UPDATE contact SET value = ? " +
-                                "WHERE type = ? " +
-                                "AND resume_uuid = ?"
-        )) {
+    private void addSqlContact(Connection conn, Resume r) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (value, type, resume_uuid) " +
+                "VALUES (?,?,?)")) {
             for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
                 ps.setString(3, r.getUuid());
                 ps.setString(2, e.getKey().name());
@@ -137,6 +133,13 @@ public class SqlStorage<sqlHelper> implements Storage {
                 ps.addBatch();
             }
             ps.executeBatch();
+        }
+    }
+
+    private void deleteContact(Connection conn, Resume r) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?")) {
+            ps.setString(1, r.getUuid());
+            ps.execute();
         }
     }
 

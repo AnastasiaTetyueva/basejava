@@ -11,9 +11,9 @@ public class ResumeTestData {
         Resume RESUME = new Resume();
         RESUME.setFullName("Григорий Кислин");
 
-        RESUME.setContact(ContactType.PHONE, "+7(921) 855-0482");
-        RESUME.setContact(ContactType.SKYPE, "skype:grigory.kislin");
-        RESUME.setContact(ContactType.EMAIL, "gkislin@yandex.ru");
+        //RESUME.setContact(ContactType.PHONE, "+7(921) 855-0482");
+        //RESUME.setContact(ContactType.SKYPE, "skype:grigory.kislin");
+        //RESUME.setContact(ContactType.EMAIL, "gkislin@yandex.ru");
         RESUME.setContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
         RESUME.setContact(ContactType.GITHUB, "https://github.com/gkislin");
         RESUME.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
@@ -108,9 +108,9 @@ public class ResumeTestData {
      public static Resume createResume(String uuid, String fulLName) {
         Resume RESUME = new Resume(uuid, fulLName);
 
-        RESUME.setContact(ContactType.PHONE, "+7(921) 855-0482");
-        RESUME.setContact(ContactType.SKYPE, "skype:grigory.kislin");
-        RESUME.setContact(ContactType.EMAIL, "gkislin@yandex.ru");
+        //RESUME.setContact(ContactType.PHONE, "+7(921) 855-0482");
+        //RESUME.setContact(ContactType.SKYPE, "skype:grigory.kislin");
+        //RESUME.setContact(ContactType.EMAIL, "gkislin@yandex.ru");
         RESUME.setContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
         RESUME.setContact(ContactType.GITHUB, "https://github.com/gkislin");
         RESUME.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
