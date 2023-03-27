@@ -6,10 +6,7 @@ import com.urise.webapp.model.Resume;
 import com.urise.webapp.sql.SqlHelper;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SqlStorage<sqlHelper> implements Storage {
@@ -70,7 +67,9 @@ public class SqlStorage<sqlHelper> implements Storage {
                         throw new NotExistStorageException(uuid);
                     }
                     Resume r = new Resume(uuid, rs.getString("full_name"));
-                    getContacts(r, rs);
+                    do {
+                        getContact(rs, r);
+                    } while (rs.next());
                     return r;
                 });
     }
@@ -88,28 +87,23 @@ public class SqlStorage<sqlHelper> implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        Map<String, Resume> map = sqlHelper.exec("SELECT * FROM resume",
-                ps -> {
-                    Map<String, Resume> m = new HashMap<>();
-                    ResultSet rs = ps.executeQuery();
-                    while (rs.next()) {
-                        Resume r = new Resume(rs.getString("uuid"), rs.getString("full_name"));
-                        m.put(rs.getString("uuid"), r);
-                    }
-                    return m;
-                });
-        for (Map.Entry<String, Resume> entry : map.entrySet()) {
-            sqlHelper.exec("SELECT * FROM contact WHERE resume_uuid = ?", ps -> {
-                ps.setString(1, entry.getKey());
-                ResultSet rs = ps.executeQuery();
-                if (!rs.next()) {
-                    return null;
+        return sqlHelper.exec("SELECT * FROM resume", ps -> {
+            Map<String, Resume> resumes = new LinkedHashMap<>();
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String uuid = rs.getString("uuid");
+                Resume resume = new Resume(uuid, rs.getString("full_name"));
+                resumes.put(uuid, resume);
+            }
+            sqlHelper.exec("SELECT * FROM contact", ps1 -> {
+                ResultSet rs1 = ps1.executeQuery();
+                while (rs1.next()) {
+                    getContact(rs1, resumes.get(rs1.getString("resume_uuid")));
                 }
-                getContacts(entry.getValue(), rs);
                 return null;
             });
-        }
-        return new ArrayList<Resume>(map.values()).stream().sorted(AbstractStorage.RESUME_COMPARATOR).collect(Collectors.toList());
+            return resumes.values().stream().sorted(AbstractStorage.RESUME_COMPARATOR).collect(Collectors.toList());
+        });
     }
 
     @Override
@@ -120,12 +114,11 @@ public class SqlStorage<sqlHelper> implements Storage {
         });
     }
 
-    private void getContacts(Resume r, ResultSet rs) throws SQLException {
-        do {
-            String value = rs.getString("value");
-            ContactType type = ContactType.valueOf(rs.getString("type"));
-            r.setContact(type, value);
-        } while (rs.next());
+    private void getContact(ResultSet rs, Resume r) throws SQLException {
+        String type = rs.getString("type");
+        if (type != null) {
+            r.setContact(ContactType.valueOf(type), rs.getString("value"));
+        }
     }
 
     private void addSqlContact(Connection conn, String command, Resume r) throws SQLException {
