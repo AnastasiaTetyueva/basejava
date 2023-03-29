@@ -89,22 +89,24 @@ public class SqlStorage<sqlHelper> implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.exec("SELECT * FROM resume", ps -> {
-            Map<String, Resume> resumes = new LinkedHashMap<>();
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                String uuid = rs.getString("uuid");
-                Resume resume = new Resume(uuid, rs.getString("full_name"));
-                resumes.put(uuid, resume);
-            }
-            sqlHelper.exec("SELECT * FROM contact", ps1 -> {
-                ResultSet rs1 = ps1.executeQuery();
-                while (rs1.next()) {
-                    getContact(rs1, resumes.get(rs1.getString("resume_uuid")));
-                }
-                return null;
-            });
-            return resumes.values().stream().sorted(AbstractStorage.RESUME_COMPARATOR).collect(Collectors.toList());
+        return sqlHelper.transactionalExecute(conn -> {
+                    Map<String, Resume> resumes = new LinkedHashMap<>();
+                    try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume")) {
+                        ResultSet rs = ps.executeQuery();
+                        while (rs.next()) {
+                            String uuid = rs.getString("uuid");
+                            Resume resume = new Resume(uuid, rs.getString("full_name"));
+                            resumes.put(uuid, resume);
+                        }
+                        ps.execute();
+                    }
+                    try (PreparedStatement ps1 = conn.prepareStatement("SELECT * FROM contact")) {
+                        ResultSet rs1 = ps1.executeQuery();
+                        while (rs1.next()) {
+                            getContact(rs1, resumes.get(rs1.getString("resume_uuid")));
+                        }
+                    }
+                    return resumes.values().stream().sorted(AbstractStorage.RESUME_COMPARATOR).collect(Collectors.toList());
         });
     }
 
