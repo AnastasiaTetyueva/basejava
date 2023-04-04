@@ -1,7 +1,6 @@
 package com.urise.webapp;
 
 import com.urise.webapp.storage.SqlStorage;
-import com.urise.webapp.storage.Storage;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,7 +12,7 @@ public class Config {
     private static final File PROPS = new File("config/resumes.properties");
     private static final Config INSTANCE = new Config();
 
-    private final Storage storage;
+    private final SqlStorage storage;
     private final File storageDir;
 
     public Config() {
@@ -38,7 +37,7 @@ public class Config {
         return storageDir;
     }
 
-    public Storage getStorage() {
+    public SqlStorage getStorage() {
         return storage;
     }
 

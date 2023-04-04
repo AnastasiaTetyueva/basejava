@@ -12,3 +12,33 @@ footer {
     padding: 5px 20px;
     margin: 20px 0;
 }
+
+h2 {
+    color: darkslateblue;
+    font-style: italic;
+}
+
+.con {
+    color: red;
+    background-color: #B0C4DE;
+    font-style: oblique;
+    font-size: 14px;
+}
+
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+td, th {
+    padding: 3px;
+    border: 1px solid black;
+}
+
+tr:first-child {
+    padding: 4px;
+    background-color: #B0C4DE;
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+}
