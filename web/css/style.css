@@ -14,15 +14,7 @@ footer {
 }
 
 h2 {
-    color: darkslateblue;
-    font-style: italic;
-}
-
-.con {
-    color: red;
-    background-color: #B0C4DE;
-    font-style: oblique;
-    font-size: 14px;
+    color: mediumslateblue;
 }
 
 table {

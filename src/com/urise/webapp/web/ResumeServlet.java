@@ -35,61 +35,29 @@ public class ResumeServlet extends HttpServlet {
                 out.printf("<h1>%s</h1><br>", resume.getFullName());
 
                 Map<ContactType, String> contacts = resume.getContacts();
-                for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-                    ContactType type = entry.getKey();
-                    switch (type) {
-                        case PHONE:
-                            out.printf("<a href='tel:+7(921) 855-0482'>Tелефон</a><br>");
-                            break;
-                        case EMAIL:
-                            out.printf("<a href='mailto:gkislin@yandex.ru'>E-mail</a><br>");
-                            break;
-                        case SKYPE:
-                            out.printf("<a href='skype:grigory.kislin'>Skype</a><br>");
-                            break;
-                        case GITHUB:
-                            out.printf("<a href='https://github.com/gkislin'>Профиль Github</a><br>");
-                            break;
-                        case HOMEPAGE:
-                            out.printf("<a href='http://gkislin.ru/'>Домашняя страница</a><br>");
-                            break;
-                        case LINKEDIN:
-                            out.printf("<a href='https://www.linkedin.com/in/gkislin'>Профиль Linkedin</a><br>");
-                            break;
-                        case STACKOVERFLOW:
-                            out.printf("<a href='https://stackoverflow.com/users/548473'>Профиль Stackoverflow</a><br>");
-                            break;
-                    }
+                for (ContactType contact : ContactType.values()) {
+                    out.printf("<a href='%s%s'>%s</a><br>", contact.getPrefix(), contacts.get(contact), contact.getTitle());
                 }
                 out.println("<br>");
 
                 Map<SectionType, AbstractSection> sections = resume.getSections();
-                for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
-                    SectionType type = entry.getKey();
-                    switch (type) {
-                        case PERSONAL: {
-                            TextSection section = (TextSection) entry.getValue();
-                            out.printf("<h2>Личные качества</h2>");
-                            out.printf("<p>%s</p><br>", section.getText());
-                        }
-                        break;
+                for (SectionType section : SectionType.values()) {
+                    out.printf("<h2>%s</h2>", section.getTitle());
+                    switch (section) {
+                        case PERSONAL:
                         case OBJECTIVE: {
-                            TextSection section = (TextSection) entry.getValue();
-                            out.printf("<h2>Позиция</h2>");
-                            out.printf("<p>%s</p><br>", section.getText());
+                            TextSection sec = (TextSection) sections.get(section);
+                            out.printf("<p>%s</p><br>", sec);
                         }
                         break;
-                        case ACHIEVEMENT: {
-                            ListSection section = (ListSection) entry.getValue();
-                            out.printf("<h2>Достижения</h2>");
-                            listToHtml(out, section);
-                        }
-                        break;
+                        case ACHIEVEMENT:
                         case QUALIFICATIONS: {
-                            ListSection section = (ListSection) entry.getValue();
-                            out.printf("<h2>Квалификация</h2>");
-                            listToHtml(out, section);
+                            ListSection sec = (ListSection) sections.get(section);
+                            listToHtml(out, sec);
                         }
+                        break;
+                        default:
+                            break;
                     }
                 }
             } else {
@@ -108,8 +76,6 @@ public class ResumeServlet extends HttpServlet {
             }
             out.println("</body></html>");
         }
-
-
     }
 
     private void listToHtml(PrintWriter printWriter, ListSection section) {
@@ -119,4 +85,6 @@ public class ResumeServlet extends HttpServlet {
         }
         printWriter.printf("</ul><br>");
     }
+
+
 }

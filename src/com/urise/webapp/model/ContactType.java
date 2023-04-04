@@ -1,21 +1,28 @@
 package com.urise.webapp.model;
 
 public enum ContactType {
-    PHONE("Телефон"),
-    SKYPE("Skype"),
-    EMAIL("Почта"),
-    LINKEDIN("Профиль LinkedIn"),
-    GITHUB("Профиль GitHub"),
-    STACKOVERFLOW("Профиль Stackoverflow"),
-    HOMEPAGE("Домашняя страница");
+    PHONE("Телефон", "tel:"),
+    SKYPE("Skype", "skype:"),
+    EMAIL("Почта", "mailto:"),
+    LINKEDIN("Профиль LinkedIn",""),
+    GITHUB("Профиль GitHub", ""),
+    STACKOVERFLOW("Профиль Stackoverflow", ""),
+    HOMEPAGE("Домашняя страница", "");
 
     private final String title;
+    private final String prefix;
 
-    ContactType(String title) {
+    ContactType(String title, String prefix) {
         this.title = title;
+        this.prefix = prefix;
     }
 
     public String getTitle() {
         return title;
     }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
 }
