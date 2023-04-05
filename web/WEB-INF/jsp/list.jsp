@@ -6,9 +6,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/style.css">
-    <title>Список всех резюме</title>
+    <title>AllResumes</title>
 </head>
 <body>
+<jsp:include page="fragments/header.jsp"/>
+<h1>Список резюме</h1>
 <section>
     <table>
         <tr>
@@ -29,5 +31,6 @@
         %>
     </table>
 </section>
+<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>
