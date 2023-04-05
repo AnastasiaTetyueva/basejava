@@ -7,7 +7,6 @@ import com.urise.webapp.util.JsonParser;
 
 import java.sql.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SqlStorage<sqlHelper> implements Storage {
 
