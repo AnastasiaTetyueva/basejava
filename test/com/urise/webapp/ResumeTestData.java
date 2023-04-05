@@ -14,7 +14,7 @@ public class ResumeTestData {
         RESUME.setContact(ContactType.PHONE, "+7(921) 855-0482");
         RESUME.setContact(ContactType.SKYPE, "skype:grigory.kislin");
         RESUME.setContact(ContactType.EMAIL, "gkislin@yandex.ru");
-        RESUME.setContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
+        RESUME.setContact(ContactType.LINKEDIN, "https://linkedin.com/in/gkislin");
         RESUME.setContact(ContactType.GITHUB, "https://github.com/gkislin");
         RESUME.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         RESUME.setContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
@@ -111,7 +111,7 @@ public class ResumeTestData {
         RESUME.setContact(ContactType.PHONE, "+7(921) 855-0482");
         RESUME.setContact(ContactType.SKYPE, "skype:grigory.kislin");
         RESUME.setContact(ContactType.EMAIL, "gkislin@yandex.ru");
-        RESUME.setContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
+        RESUME.setContact(ContactType.LINKEDIN, "https://linkedin.com/in/gkislin");
         RESUME.setContact(ContactType.GITHUB, "https://github.com/gkislin");
         RESUME.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         RESUME.setContact(ContactType.HOMEPAGE, "http://gkislin.ru/");

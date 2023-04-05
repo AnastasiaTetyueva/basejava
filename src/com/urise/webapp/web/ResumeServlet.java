@@ -4,6 +4,7 @@ import com.urise.webapp.Config;
 import com.urise.webapp.model.*;
 import com.urise.webapp.storage.SqlStorage;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +15,13 @@ import java.util.List;
 import java.util.Map;
 
 public class ResumeServlet extends HttpServlet {
-    private SqlStorage storage = Config.get().getStorage();
+    private SqlStorage storage;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init();
+        storage = Config.get().getStorage();
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
