@@ -40,7 +40,7 @@ public class ResumeTestData {
         qualificationList.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce.");
         qualificationList.add("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy.");
         RESUME.setSection(SectionType.QUALIFICATIONS, qualifications);
-/*
+
         // Experience
         OrganizationSection experience = new OrganizationSection();
         List<Organization> experienceList = experience.getOrganizations();
@@ -102,7 +102,7 @@ public class ResumeTestData {
 
         RESUME.setSection(SectionType.EDUCATION, education);
 
-        System.out.println(RESUME.toString()); */
+        System.out.println(RESUME.toString());
     }
 
      public static Resume createResume(String uuid, String fulLName) {
@@ -135,7 +135,7 @@ public class ResumeTestData {
         qualificationList.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2.");
         qualificationList.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce.");
         RESUME.setSection(SectionType.QUALIFICATIONS, qualifications);
-/*
+
         // Experience
         OrganizationSection experience = new OrganizationSection();
         List<Organization> experienceList = experience.getOrganizations();
@@ -174,7 +174,7 @@ public class ResumeTestData {
         periodListEd3.add(periodEd3First);
         educationList.add(organizationEd3);
         RESUME.setSection(SectionType.EDUCATION, education);
-*/
+
         return RESUME;
 
 

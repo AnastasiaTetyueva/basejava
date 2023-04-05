@@ -36,11 +36,11 @@ public abstract class AbstractStorageTest {
     protected static final String name2 = "Иванов Иван";
     protected static final String name3 = "Иванов Иван";
 
-    protected static final Resume RESUME_1;
-    protected static final Resume RESUME_2;
-    protected static final Resume RESUME_3;
-    protected static final Resume RESUME_4;
-    protected static final Resume RESUME_5;
+    public static final Resume RESUME_1;
+    public static final Resume RESUME_2;
+    public static final Resume RESUME_3;
+    public static final Resume RESUME_4;
+    public static final Resume RESUME_5;
 
     static {
         RESUME_1 = ResumeTestData.createResume(UUID1, name1);

@@ -3,6 +3,7 @@ package com.urise.webapp.storage;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.*;
 import com.urise.webapp.sql.SqlHelper;
+import com.urise.webapp.util.JsonParser;
 
 import java.sql.*;
 import java.util.*;
@@ -141,21 +142,10 @@ public class SqlStorage<sqlHelper> implements Storage {
     }
 
     private void getSection(ResultSet rs, Resume r) throws SQLException {
-        SectionType type = SectionType.valueOf(rs.getString("type"));
-        switch (type) {
-            case PERSONAL:
-            case OBJECTIVE:
-                TextSection resultT = new TextSection();
-                resultT.setText(rs.getString("value"));
-                r.setSection(type, resultT);
-                break;
-            case ACHIEVEMENT:
-            case QUALIFICATIONS:
-                ListSection resultL = new ListSection();
-                resultL.getList().addAll(Arrays.asList(rs.getString("value").split("\n")));
-                r.setSection(type, resultL);
-                break;
-            default: break;
+        String value = rs.getString("value");
+        if (value != null) {
+            SectionType type = SectionType.valueOf(rs.getString("type"));
+            r.setSection(type, JsonParser.read(value, AbstractSection.class));
         }
     }
 
@@ -175,23 +165,11 @@ public class SqlStorage<sqlHelper> implements Storage {
     private void addSqlSections(Connection conn, Resume r) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (value, type, resume_uuid) " +
                 "VALUES (?,?,?)")) {
-            Map<SectionType, AbstractSection> sections = r.getSections();
             for (Map.Entry<SectionType, AbstractSection> e : r.getSections().entrySet()) {
                 ps.setString(3, r.getUuid());
                 ps.setString(2, e.getKey().name());
-                switch (e.getKey()) {
-                    case PERSONAL:
-                    case OBJECTIVE:
-                        TextSection sec = (TextSection) sections.get(e.getKey());
-                        ps.setString(1,  sec.toString());
-                        break;
-                    case ACHIEVEMENT:
-                    case QUALIFICATIONS:
-                        ListSection sec1 = (ListSection) sections.get(e.getKey());
-                        ps.setString(1, String.join("\n", sec1.getList()));
-                        break;
-                    default: break;
-                }
+                AbstractSection section = e.getValue();
+                ps.setString(1, JsonParser.write(section, AbstractSection.class));
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -199,14 +177,15 @@ public class SqlStorage<sqlHelper> implements Storage {
     }
 
     private void deleteContacts(Connection conn, Resume r) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid = ?")) {
-            ps.setString(1, r.getUuid());
-            ps.execute();
-        }
+        deleteAttributes(conn, r, "DELETE FROM contact WHERE resume_uuid = ?");
     }
 
     private void deleteSections(Connection conn, Resume r) throws SQLException {
-        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM section WHERE resume_uuid = ?")) {
+        deleteAttributes(conn, r, "DELETE FROM section WHERE resume_uuid = ?");
+    }
+
+    private void deleteAttributes(Connection conn, Resume r, String query) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, r.getUuid());
             ps.execute();
         }
