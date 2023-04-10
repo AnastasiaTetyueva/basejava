@@ -18,7 +18,28 @@
         <c:forEach var="contactType" items="${ContactType.values()}">
                 <jsp:useBean id="contactType" type="com.urise.webapp.model.ContactType"/>
             <c:if test="${contacts.get(contactType) != null}">
-                    <%=contactType.getTitle() + ":  "%><a href="${contactType.prefix}${contacts.get(contactType)}">${contacts.get(contactType)}</a><br/>
+                <c:if test="${contactType.equals(ContactType.PHONE)}">
+                    <c:set var="img" value="<img src='img/phone.png' height='16' width='16'>"/>
+                </c:if>
+                <c:if test="${contactType.equals(ContactType.SKYPE)}">
+                    <c:set var="img" value="<img src='img/skype.png'>"/>
+                </c:if>
+                <c:if test="${contactType.equals(ContactType.EMAIL)}">
+                    <c:set var="img" value="<img src='img/email.png'>"/>
+                </c:if>
+                <c:if test="${contactType.equals(ContactType.LINKEDIN)}">
+                    <c:set var="img" value="<img src='img/lin.png'>"/>
+                </c:if>
+                <c:if test="${contactType.equals(ContactType.GITHUB)}">
+                    <c:set var="img" value="<img src='img/gh.png'>"/>
+                </c:if>
+                <c:if test="${contactType.equals(ContactType.STACKOVERFLOW)}">
+                    <c:set var="img" value="<img src='img/so.png'>"/>
+                </c:if>
+                <c:if test="${contactType.equals(ContactType.HOMEPAGE)}">
+                    <c:set var="img" value="<img src='img/homepage.png' height='16' width='16'>"/>
+                </c:if>
+                    ${img}<a href="${contactType.prefix}${contacts.get(contactType)}">${contacts.get(contactType)}</a><br/>
             </c:if>
         </c:forEach>
     <p>
