@@ -3,6 +3,7 @@ header {
     color: #2E6E9E;
     font-size: 20px;
     padding: 5px 20px;
+    text-align: center;
 }
 
 footer {
@@ -11,10 +12,16 @@ footer {
     font-size: 20px;
     padding: 5px 20px;
     margin: 20px 0;
+    text-align: center;
 }
 
 h2 {
     color: mediumslateblue;
+    margin: 15px 0 5px;
+}
+
+h3 {
+    margin: 15px 0 5px;
 }
 
 table {
@@ -23,7 +30,7 @@ table {
 }
 
 td, th {
-    padding: 3px;
+    padding: 5px;
     border: 1px solid black;
 }
 
@@ -34,3 +41,8 @@ tr:first-child {
     font-weight: bold;
     font-size: 20px;
 }
+
+section {
+    width: 900px;
+}
+

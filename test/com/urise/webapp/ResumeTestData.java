@@ -148,6 +148,17 @@ public class ResumeTestData {
                 "Создание, организация и проведение Java онлайн проектов и стажировок.");
         periodListEx1.add(periodEx1);
         experienceList.add(organizationEx1);
+
+         Organization organizationEx2 = new Organization();
+         organizationEx2.setName("Wrike");
+         organizationEx2.setWebsite("https://www.wrike.com/");
+         List<Period> periodListEx2 = organizationEx2.getPeriods();
+         Period periodEx2 = new Period(LocalDate.of(2014, 10, 01), LocalDate.of(2016, 01, 01),
+                 "Старший разработчик (backend)",
+                 "Проектирование и разработка онлайн платформы управления проектами Wrike " +
+                         "(Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis).");
+         periodListEx2.add(periodEx2);
+         experienceList.add(organizationEx2);
         RESUME.setSection(SectionType.EXPERIENCE, experience);
 
         // Education
