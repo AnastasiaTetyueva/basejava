@@ -14,7 +14,7 @@ import java.util.*;
 public class Resume implements Serializable {
     private static final long serialVersionUID = 1L;
     // Unique identifier
-    private final String uuid;
+    private String uuid;
 
     private String fullName;
 
@@ -79,6 +79,10 @@ public class Resume implements Serializable {
 
     public String getUuid() {
         return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getFullName() {

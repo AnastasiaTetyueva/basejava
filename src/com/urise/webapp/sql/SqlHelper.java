@@ -14,6 +14,11 @@ public class SqlHelper {
 
     public SqlHelper(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new StorageException(e);
+        }
     }
 
     public <T> T exec(@Language("SQL")String query, SqlExecutor<T> perform) {

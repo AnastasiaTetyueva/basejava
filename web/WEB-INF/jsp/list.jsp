@@ -10,7 +10,7 @@
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
-<h1>Список резюме</h1>
+<h1>Список резюме <a href="resume?action=create"><img src="img/add.png"></a></h1>
 <section>
     <table>
         <tr>

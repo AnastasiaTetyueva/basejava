@@ -25,7 +25,13 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        Resume r = storage.get(uuid);
+        boolean isCreating = (uuid == null || uuid.length() == 0);
+        Resume r;
+        if (isCreating) {
+            r = new Resume();
+        } else {
+            r = storage.get(uuid);
+        }
         r.setFullName(fullName);
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
@@ -35,8 +41,13 @@ public class ResumeServlet extends HttpServlet {
                 r.getContacts().remove(type);
             }
         }
-        storage.update(r);
+        if (isCreating) {
+            storage.save(r);
+        } else {
+            storage.update(r);
+        }
         response.sendRedirect("resume");
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -57,13 +68,21 @@ public class ResumeServlet extends HttpServlet {
             case "edit":
                 r = storage.get(uuid);
                 break;
+            case "create":
+                r = new Resume();
+                r.setUuid(null);
+                break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
         }
         request.setAttribute("resume", r);
-        request.getRequestDispatcher(
-                ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
-        ).forward(request, response);
+        if (action.equals("create")) {
+            request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher(
+                    ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
+            ).forward(request, response);
+        }
     }
 
 }
