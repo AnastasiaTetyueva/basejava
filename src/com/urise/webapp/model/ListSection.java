@@ -6,9 +6,13 @@ import java.util.List;
 public class ListSection extends AbstractSection {
     private static final long serialVersionUID = 1L;
 
-    private final List<String> list = new ArrayList<String>();
+    private List<String> list = new ArrayList<String>();
 
     public ListSection() {
+    }
+
+    public ListSection(List<String> list) {
+        this.list.addAll(list);
     }
 
     public List<String> getList() {

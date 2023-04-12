@@ -1,8 +1,7 @@
 package com.urise.webapp.web;
 
 import com.urise.webapp.Config;
-import com.urise.webapp.model.ContactType;
-import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.*;
 import com.urise.webapp.storage.SqlStorage;
 
 import javax.servlet.ServletConfig;
@@ -11,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class ResumeServlet extends HttpServlet {
     private SqlStorage storage;
@@ -39,6 +39,24 @@ public class ResumeServlet extends HttpServlet {
                 r.setContact(type, value);
             } else {
                 r.getContacts().remove(type);
+            }
+        }
+        for (SectionType type : SectionType.values()) {
+            String value = request.getParameter(type.name());
+            if (value != null) {
+                switch (type) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        r.setSection(type, new TextSection(value));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        r.setSection(type, new ListSection(Arrays.asList(value.split("\n"))));
+                        break;
+                    default: break;
+                }
+            } else {
+                r.getSections().remove(type);
             }
         }
         if (isCreating) {
