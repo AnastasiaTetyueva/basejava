@@ -53,6 +53,9 @@ public class ResumeServlet extends HttpServlet {
                     case QUALIFICATIONS:
                         r.setSection(type, new ListSection(Arrays.asList(value.split("\n"))));
                         break;
+                    case EXPERIENCE:
+                    case EDUCATION:
+                        r.setSection(type, new OrganizationSection());
                     default: break;
                 }
             } else {
@@ -89,6 +92,12 @@ public class ResumeServlet extends HttpServlet {
             case "create":
                 r = new Resume();
                 r.setUuid(null);
+                r.setSection(SectionType.PERSONAL, new TextSection());
+                r.setSection(SectionType.OBJECTIVE, new TextSection());
+                r.setSection(SectionType.ACHIEVEMENT, new ListSection());
+                r.setSection(SectionType.QUALIFICATIONS, new ListSection());
+                r.setSection(SectionType.EXPERIENCE, new OrganizationSection());
+                r.setSection(SectionType.EDUCATION, new OrganizationSection());
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
