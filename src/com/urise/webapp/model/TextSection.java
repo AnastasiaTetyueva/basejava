@@ -14,7 +14,7 @@ public class TextSection extends AbstractSection {
     }
 
     public String getText() {
-        return text;
+        return text.trim();
     }
 
     public void setText(String text) {
@@ -23,12 +23,15 @@ public class TextSection extends AbstractSection {
 
     @Override
     public int hashCode() {
-        return text.hashCode();
+        return getText().hashCode();
     }
 
     @Override
     public String toString() {
-        return text;
+        return getText();
     }
+
+    @Override
+    public boolean isEmpty() { return text == null || getText().length() == 0; }
 
 }

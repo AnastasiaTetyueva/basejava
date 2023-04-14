@@ -6,7 +6,7 @@ import java.util.List;
 public class ListSection extends AbstractSection {
     private static final long serialVersionUID = 1L;
 
-    private List<String> list = new ArrayList<String>();
+    private final List<String> list = new ArrayList<String>();
 
     public ListSection() {
     }
@@ -28,9 +28,15 @@ public class ListSection extends AbstractSection {
     public String toString() {
         StringBuilder str = new StringBuilder();
         for (String row : list) {
-            str.append(row); str.append("\n");
+            String goodRow = row.trim();
+            if (goodRow.length() != 0) {
+                str.append(row); str.append("\n");
+            }
         }
         return str.toString();
     }
+
+    @Override
+    public boolean isEmpty() { return list.size() == 0; }
 
 }

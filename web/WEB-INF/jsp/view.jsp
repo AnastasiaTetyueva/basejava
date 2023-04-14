@@ -46,135 +46,61 @@
     <br/>
     <c:set var="sections" value="${resume.sections}"/>
     <c:forEach var="sectionType" items="${SectionType.values()}">
-            <jsp:useBean id="sectionType" type="com.urise.webapp.model.SectionType"/>
         <c:if test="${sections.get(sectionType) != null}">
-            <h2><%=sectionType.getTitle()%></h2>
-            <c:choose>
-                <c:when test="${sectionType.equals(SectionType.PERSONAL)}">
-                    <p>
-                        <%=resume.getSection(SectionType.PERSONAL)%>
-                    </p>
-                    <br/>
-                </c:when>
-                <c:when test="${sectionType.equals(SectionType.OBJECTIVE)}">
-                    <p>
-                        <%=resume.getSection(SectionType.OBJECTIVE)%>
-                    </p>
-                    <br/>
-                </c:when>
-                <c:when test="${sectionType.equals(SectionType.ACHIEVEMENT)}">
-                    <ul>
-                    <%ListSection listSection = (ListSection) resume.getSection(SectionType.ACHIEVEMENT);
-                        for (String row : listSection.getList()) {
-                    %>
-                        <li>
-                            <%=row%>
-                        </li>
-                    <%
-                        }
-                    %>
-                    </ul>
-                    <br/>
-                </c:when>
-                <c:when test="${sectionType.equals(SectionType.QUALIFICATIONS)}">
-                    <ul>
-                        <%ListSection listSection = (ListSection) resume.getSection(SectionType.QUALIFICATIONS);
-                            for (String row : listSection.getList()) {
-                        %>
-                        <li>
-                            <%=row%>
-                        </li>
-                        <%
-                            }
-                        %>
-                    </ul>
-                    <br/>
-                </c:when>
-                <c:when test="${sectionType.equals(SectionType.EXPERIENCE)}">
-                    <table>
-                        <%
-                            OrganizationSection organizationSection = (OrganizationSection) resume.getSection(SectionType.EXPERIENCE);
-                            List<Organization> organizationList = organizationSection.getOrganizations();
-                            for (Organization organization : organizationList) {
-                        %>
-                        <tr>
-                            <td>
-                                <%
-                                    List<Period> periods = organization.getPeriods();
-                                    for (Period period : periods) {
-                                %>
-                                <p class="org">
-                                    <%=period.getStart() + " -- " + period.getEnd()%><br/>
-                                </p>
-                                <p>
-                                    <%=period.getTitle()%><br/>
-                                </p>
-                                <p>
-                                    <%=period.getDescription()%><br/>
-                                </p>
-                                <%
-                                    }
-                                %>
-                            </td>
-                            <td>
-                                <p class="org">
-                                    <%=organization.getName()%>
-                                </p>
-                                <p>
-                                    <a href="<%=organization.getWebsite()%>>"><%=organization.getWebsite()%></a>
-                                </p>
-                            </td>
-                        </tr>
-                        <%
-                            }
-                        %>
-                    </table>
-                </c:when>
-                <c:when test="${sectionType.equals(SectionType.EDUCATION)}">
-                    <table>
-                        <%
-                            OrganizationSection organizationSection = (OrganizationSection) resume.getSection(SectionType.EDUCATION);
-                            List<Organization> organizationList = organizationSection.getOrganizations();
-                            for (Organization organization : organizationList) {
-                        %>
-                        <tr>
-                            <td>
-                                <%
-                                    List<Period> periods = organization.getPeriods();
-                                    for (Period period : periods) {
-                                %>
-                                <p class="org">
-                                    <%=period.getStart() + " -- " + period.getEnd()%><br/>
-                                </p>
-                                <p>
-                                    <%=period.getTitle()%><br/>
-                                </p>
-                                <p>
-                                    <%=period.getDescription()%><br/>
-                                </p>
-                                <%
-                                    }
-                                %>
-                            </td>
-                            <td>
-                                <p class="org">
-                                    <%=organization.getName()%>
-                                </p>
-                                <p>
-                                    <a href="<%=organization.getWebsite()%>>"><%=organization.getWebsite()%></a>
-                                </p>
-                            </td>
-                        </tr>
-                        <%
-                            }
-                        %>
-                    </table>
-                </c:when>
-
-            </c:choose>
+            <c:set var="section" value="${sections.get(sectionType)}"/>
+            <jsp:useBean id="section" type="com.urise.webapp.model.AbstractSection"/>
+            <c:if test="<%=!section.isEmpty()%>">
+                <h2>${sectionType.title}</h2>
+                <c:choose>
+                    <c:when test="${sectionType=='PERSONAL' || sectionType=='OBJECTIVE'}">
+                        <p>
+                            <%=((TextSection) section).getText()%>
+                        </p>
+                        <br/>
+                    </c:when>
+                    <c:when test="${sectionType=='ACHIEVEMENT' || sectionType=='QUALIFICATIONS'}">
+                        <ul>
+                            <c:forEach var="row" items="<%=((ListSection) section).getList()%>">
+                                <li>
+                                        ${row}
+                                </li>
+                            </c:forEach>
+                        </ul>
+                        <br/>
+                    </c:when>
+                    <c:when test="${sectionType=='EXPERIENCE' || sectionType=='EDUCATION'}">
+                        <table>
+                            <c:forEach var="organization" items="<%=((OrganizationSection) section).getOrganizations()%>">
+                                <tr>
+                                    <td>
+                                        <c:forEach var="period" items="${organization.periods}">
+                                            <p class="org">
+                                                    ${period.start} + " -- " + ${period.end}<br/>
+                                            </p>
+                                            <p>
+                                                    ${period.title}<br/>
+                                            </p>
+                                            <p>
+                                                    ${period.description}<br/>
+                                            </p>
+                                        </c:forEach>
+                                    </td>
+                                    <td>
+                                        <p class="org">
+                                                ${organization.name}
+                                        </p>
+                                        <p>
+                                                <a href="${organization.website}>">${organization.website}</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </table>
+                    </c:when>
+                </c:choose>
+            </c:if>
         </c:if>
     </c:forEach>
-
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

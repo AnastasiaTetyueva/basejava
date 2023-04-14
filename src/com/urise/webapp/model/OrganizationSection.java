@@ -28,4 +28,6 @@ public class OrganizationSection extends AbstractSection {
         return str.toString();
     }
 
+    @Override
+    public boolean isEmpty() { return organizations.size() == 0; }
 }

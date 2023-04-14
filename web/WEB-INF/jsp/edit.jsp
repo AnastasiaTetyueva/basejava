@@ -29,6 +29,7 @@
         <hr>
         <c:set var="sections" value="${resume.sections}"/>
         <c:forEach var="sectionType" items="<%=SectionType.values()%>">
+            <c:if test="${sections.get(sectionType) != null}">
                 <c:set var="section" value="${sections.get(sectionType)}"/>
                 <jsp:useBean id="section" type="com.urise.webapp.model.AbstractSection"/>
                 <h3>${sectionType.title}</h3>
@@ -71,6 +72,7 @@
                         </c:forEach>
                     </c:when>
                 </c:choose>
+            </c:if>
         </c:forEach>
         <hr>
         <button type="submit">Сохранить</button>

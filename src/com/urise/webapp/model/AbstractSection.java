@@ -13,5 +13,6 @@ public class AbstractSection<T> implements Serializable {
         return this.hashCode() == o.hashCode();
     }
 
+    public boolean isEmpty() { return false; }
     public void doWriteData(DataOutputStream outputStream) throws IOException {}
 }

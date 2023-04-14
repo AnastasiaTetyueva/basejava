@@ -141,8 +141,8 @@ public class SqlStorage<sqlHelper> implements Storage {
     }
 
     private void getSection(ResultSet rs, Resume r) throws SQLException {
-        String value = rs.getString("value");
-        if (value != null) {
+        String value = rs.getString("value").trim();
+        if (value.length() != 0) {
             SectionType type = SectionType.valueOf(rs.getString("type"));
             r.setSection(type, JsonParser.read(value, AbstractSection.class));
         }
@@ -168,7 +168,16 @@ public class SqlStorage<sqlHelper> implements Storage {
                 ps.setString(3, r.getUuid());
                 ps.setString(2, e.getKey().name());
                 AbstractSection section = e.getValue();
-                ps.setString(1, JsonParser.write(section, AbstractSection.class));
+                if (e.getKey() == SectionType.ACHIEVEMENT || e.getKey() == SectionType.QUALIFICATIONS) {
+                    ListSection listSection = (ListSection) section;
+                    for (String row : listSection.getList()) {
+                        if (row.trim().length() != 0) {
+                            ps.setString(1, JsonParser.write(section, AbstractSection.class));
+                        }
+                    }
+                } else {
+                    ps.setString(1, JsonParser.write(section, AbstractSection.class));
+                }
                 ps.addBatch();
             }
             ps.executeBatch();

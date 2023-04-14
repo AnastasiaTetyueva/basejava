@@ -43,7 +43,7 @@ public class ResumeServlet extends HttpServlet {
         }
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
-            if (value != null) {
+            if (value != null && value.trim().length() != 0) {
                 switch (type) {
                     case PERSONAL:
                     case OBJECTIVE:
@@ -88,6 +88,44 @@ public class ResumeServlet extends HttpServlet {
             case "view":
             case "edit":
                 r = storage.get(uuid);
+                for (SectionType type : SectionType.values()) {
+                    AbstractSection section = r.getSection(type);
+                        switch (type) {
+                            case PERSONAL:
+                                if (section == null) {
+                                    r.setSection(SectionType.PERSONAL, new TextSection());
+                                }
+                                break;
+                            case OBJECTIVE:
+                                if (section == null) {
+                                    r.setSection(SectionType.OBJECTIVE, new TextSection());
+                                }
+                                break;
+                            case ACHIEVEMENT:
+                                if (section == null) {
+                                    r.setSection(SectionType.ACHIEVEMENT, new ListSection());
+                                }
+                                break;
+                            case QUALIFICATIONS:
+                                if (section == null) {
+                                    r.setSection(SectionType.QUALIFICATIONS, new ListSection());
+                                }
+                                break;
+                            case EXPERIENCE:
+                                if (section == null) {
+                                    r.setSection(SectionType.EXPERIENCE, new OrganizationSection());
+                                }
+                                break;
+                            case EDUCATION:
+                                if (section == null) {
+                                    r.setSection(SectionType.EDUCATION, new OrganizationSection());
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+
+                }
                 break;
             case "create":
                 r = new Resume();
