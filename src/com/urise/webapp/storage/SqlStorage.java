@@ -168,16 +168,7 @@ public class SqlStorage<sqlHelper> implements Storage {
                 ps.setString(3, r.getUuid());
                 ps.setString(2, e.getKey().name());
                 AbstractSection section = e.getValue();
-                if (e.getKey() == SectionType.ACHIEVEMENT || e.getKey() == SectionType.QUALIFICATIONS) {
-                    ListSection listSection = (ListSection) section;
-                    for (String row : listSection.getList()) {
-                        if (row.trim().length() != 0) {
-                            ps.setString(1, JsonParser.write(section, AbstractSection.class));
-                        }
-                    }
-                } else {
-                    ps.setString(1, JsonParser.write(section, AbstractSection.class));
-                }
+                ps.setString(1, JsonParser.write(section, AbstractSection.class));
                 ps.addBatch();
             }
             ps.executeBatch();

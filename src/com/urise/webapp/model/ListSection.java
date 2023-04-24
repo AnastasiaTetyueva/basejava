@@ -27,11 +27,16 @@ public class ListSection extends AbstractSection {
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
+        int index = 0;
         for (String row : list) {
             String goodRow = row.trim();
             if (goodRow.length() != 0) {
-                str.append(row); str.append("\n");
+                str.append(goodRow);
+                if (index < list.size()-1) {
+                    str.append("\n");
+                }
             }
+            index++;
         }
         return str.toString();
     }

@@ -60,7 +60,7 @@
                     </c:when>
                     <c:when test="${sectionType=='ACHIEVEMENT' || sectionType=='QUALIFICATIONS'}">
                         <ul>
-                            <c:forEach var="row" items="<%=((ListSection) section).getList()%>">
+                            <c:forEach var="row" items="<%=((ListSection) section).getList().stream().map(String::trim).filter(x->!x.isEmpty()).toArray()%>">
                                 <li>
                                         ${row}
                                 </li>

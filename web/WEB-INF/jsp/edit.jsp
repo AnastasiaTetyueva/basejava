@@ -39,7 +39,7 @@
                     </c:when>
                     <c:when test="${sectionType=='ACHIEVEMENT' || sectionType=='QUALIFICATIONS'}">
                         <textarea name="${sectionType}" cols=70
-                                  rows=5><%=String.join("\n", ((ListSection) section).getList())%></textarea>
+                                  rows=5><%=String.join("\n", ((ListSection) section).getList().stream().map(String::trim).filter(x->!x.isEmpty()).toArray())%></textarea>
                     </c:when>
                     <c:when test="${sectionType=='EXPERIENCE' || sectionType=='EDUCATION'}">
                         <c:forEach var="org" items="<%=((OrganizationSection) section).getOrganizations()%>">
