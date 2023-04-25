@@ -11,11 +11,13 @@ import java.util.Objects;
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    public static final Organization EMPTY = new Organization();
+
     private String name;
 
     private String website;
 
-    private final List<Period> periods = new ArrayList<Period>();
+    private List<Period> periods = new ArrayList<Period>();
 
     public Organization() {
         this("");
@@ -23,6 +25,12 @@ public class Organization implements Serializable {
 
     public Organization(String name) {
         this.name = Objects.requireNonNull(name);
+    }
+
+    public Organization(List<Period> periods, String name, String website) {
+        this(name);
+        this.periods = periods;
+        this.website = website;
     }
 
     public List<Period> getPeriods() {

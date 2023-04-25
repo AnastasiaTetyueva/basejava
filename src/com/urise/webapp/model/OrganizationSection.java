@@ -6,9 +6,15 @@ import java.util.List;
 public class OrganizationSection extends AbstractSection {
     private static final long serialVersionUID = 1L;
 
-    private final List<Organization> organizations = new ArrayList<Organization>();
+    public static final OrganizationSection EMPTY = new OrganizationSection();
+
+    private List<Organization> organizations = new ArrayList<Organization>();
 
     public OrganizationSection() {}
+
+    public OrganizationSection(List<Organization> organizations) {
+        this.organizations = organizations;
+    }
 
     public List<Organization> getOrganizations() {
         return organizations;

@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private SqlStorage storage;
@@ -92,33 +94,32 @@ public class ResumeServlet extends HttpServlet {
                     AbstractSection section = r.getSection(type);
                         switch (type) {
                             case PERSONAL:
-                                if (section == null) {
-                                    r.setSection(SectionType.PERSONAL, new TextSection());
-                                }
-                                break;
                             case OBJECTIVE:
                                 if (section == null) {
-                                    r.setSection(SectionType.OBJECTIVE, new TextSection());
+                                    r.setSection(type, TextSection.EMPTY);
                                 }
                                 break;
                             case ACHIEVEMENT:
-                                if (section == null) {
-                                    r.setSection(SectionType.ACHIEVEMENT, new ListSection());
-                                }
-                                break;
                             case QUALIFICATIONS:
                                 if (section == null) {
-                                    r.setSection(SectionType.QUALIFICATIONS, new ListSection());
+                                    r.setSection(type, ListSection.EMPTY);
                                 }
                                 break;
                             case EXPERIENCE:
-                                if (section == null) {
-                                    r.setSection(SectionType.EXPERIENCE, new OrganizationSection());
-                                }
-                                break;
                             case EDUCATION:
                                 if (section == null) {
-                                    r.setSection(SectionType.EDUCATION, new OrganizationSection());
+                                    r.setSection(type, OrganizationSection.EMPTY);
+                                } else {
+                                    OrganizationSection organizationSection = (OrganizationSection) section;
+                                    List<Organization> orgs = new ArrayList<>();
+                                    orgs.add(Organization.EMPTY);
+                                    for (Organization org : organizationSection.getOrganizations()) {
+                                        List<Period> periodList = new ArrayList<>();
+                                        periodList.add(Period.EMPTY);
+                                        periodList.addAll(org.getPeriods());
+                                        orgs.add(new Organization(org.getPeriods(), org.getName(), org.getWebsite()));
+                                    }
+                                    r.setSection(type, new OrganizationSection(orgs));
                                 }
                                 break;
                             default:
@@ -130,12 +131,12 @@ public class ResumeServlet extends HttpServlet {
             case "create":
                 r = new Resume();
                 r.setUuid(null);
-                r.setSection(SectionType.PERSONAL, new TextSection());
-                r.setSection(SectionType.OBJECTIVE, new TextSection());
-                r.setSection(SectionType.ACHIEVEMENT, new ListSection());
-                r.setSection(SectionType.QUALIFICATIONS, new ListSection());
-                r.setSection(SectionType.EXPERIENCE, new OrganizationSection());
-                r.setSection(SectionType.EDUCATION, new OrganizationSection());
+                r.setSection(SectionType.PERSONAL, TextSection.EMPTY);
+                r.setSection(SectionType.OBJECTIVE, TextSection.EMPTY);
+                r.setSection(SectionType.ACHIEVEMENT, ListSection.EMPTY);
+                r.setSection(SectionType.QUALIFICATIONS, ListSection.EMPTY);
+                r.setSection(SectionType.EXPERIENCE, OrganizationSection.EMPTY);
+                r.setSection(SectionType.EDUCATION, OrganizationSection.EMPTY);
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
