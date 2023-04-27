@@ -84,7 +84,11 @@ public class ResumeServlet extends HttpServlet {
                                 orgs.add(new Organization(periodList, name, website));
                             }
                         }
-                        r.setSection(type, new OrganizationSection(orgs));
+                        if (orgs.stream().count() > 0) {
+                            r.setSection(type, new OrganizationSection(orgs));
+                        } else {
+                            r.getSections().remove(type);
+                        }
                     default: break;
                 }
         }
