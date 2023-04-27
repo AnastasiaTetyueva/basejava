@@ -1,5 +1,5 @@
-<%@ page import="java.util.List" %>
 <%@ page import="com.urise.webapp.model.*" %>
+<%@ page import="com.urise.webapp.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -74,15 +74,18 @@
                                 <tr>
                                     <td>
                                         <c:forEach var="period" items="${organization.periods}">
-                                            <p class="org">
-                                                    ${period.start} + " -- " + ${period.end}<br/>
-                                            </p>
-                                            <p>
-                                                    ${period.title}<br/>
-                                            </p>
-                                            <p>
-                                                    ${period.description}<br/>
-                                            </p>
+                                            <jsp:useBean id="period" type="com.urise.webapp.model.Period"/>
+                                            <c:if test="${organization.name != ''}">
+                                                <p class="org">
+                                                        <%=DateUtil.format(period.getStart()) + " — " + DateUtil.format(period.getEnd())%> <br/>
+                                                </p>
+                                                <p>
+                                                        ${period.title}<br/>
+                                                </p>
+                                                <p>
+                                                        ${period.description}<br/>
+                                                </p>
+                                            </c:if>
                                         </c:forEach>
                                     </td>
                                     <td>

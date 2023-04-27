@@ -1,12 +1,11 @@
 package com.urise.webapp.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class OrganizationSection extends AbstractSection {
     private static final long serialVersionUID = 1L;
 
-    public static final OrganizationSection EMPTY = new OrganizationSection();
+    public static final OrganizationSection EMPTY = new OrganizationSection(Collections.singletonList(Organization.EMPTY));
 
     private List<Organization> organizations = new ArrayList<Organization>();
 

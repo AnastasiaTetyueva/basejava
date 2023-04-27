@@ -3,15 +3,13 @@ package com.urise.webapp.model;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public static final Organization EMPTY = new Organization();
+    public static final Organization EMPTY = new Organization(Collections.singletonList(Period.EMPTY), "", "");
 
     private String name;
 

@@ -1,4 +1,5 @@
 <%@ page import="com.urise.webapp.model.*" %>
+<%@ page import="java.util.stream.Collectors" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -39,35 +40,48 @@
                     </c:when>
                     <c:when test="${sectionType=='ACHIEVEMENT' || sectionType=='QUALIFICATIONS'}">
                         <textarea name="${sectionType}" cols=70
-                                  rows=5><%=String.join("\n", ((ListSection) section).getList().stream().map(String::trim).filter(x->!x.isEmpty()).toArray())%></textarea>
+                                  rows=5><%=((ListSection) section).getList().stream().map(String::trim).filter(x -> !x.isEmpty()).collect(Collectors.joining("\n"))%></textarea>
                     </c:when>
                     <c:when test="${sectionType=='EXPERIENCE' || sectionType=='EDUCATION'}">
-                        <c:forEach var="org" items="<%=((OrganizationSection) section).getOrganizations()%>">
+                        <c:forEach var="org" items="<%=((OrganizationSection) section).getOrganizations()%>" varStatus="counter">
                             <dl>
-                                <dt>Наименование организации</dt>
+                                <dt style="font-weight: bold">Наименование организации</dt>
                                 <dd><input type="text" name="${sectionType}" size=80 value="${org.name}"></dd>
                             </dl>
                             <dl>
                                 <dt>Сайт организации</dt>
-                                <dd><input type="text" name="${sectionType}" size=80 value="${org.website}"></dd>
+                                <dd><input type="text" name="${sectionType}website" size=80 value="${org.website}"></dd>
                             </dl>
                             <c:forEach var="period" items="${org.periods}">
+                                <c:if test="${org.name.trim() != ''}">
+                                    <dl>
+                                        <dt>Начало работы/учебы</dt>
+                                        <dd><input type="text" name="${sectionType}${counter.index}start" size=20 value="${period.start}" placeholder="ГГГГ-ММ-ДД"></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Конец работы/учебы</dt>
+                                        <dd><input type="text" name="${sectionType}${counter.index}end" size=20 value="${period.end}" placeholder="ГГГГ-ММ-ДД"></dd>
+                                    </dl>
+                                </c:if>
+                                <c:if test="${org.name.trim() == ''}">
+                                    <dl>
+                                        <dt>Начало работы/учебы</dt>
+                                        <dd><input type="text" name="${sectionType}${counter.index}start" size=20 value="" placeholder="ГГГГ-ММ-ДД"></dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Конец работы/учебы</dt>
+                                        <dd><input type="text" name="${sectionType}${counter.index}end" size=20 value="" placeholder="ГГГГ-ММ-ДД"></dd>
+                                    </dl>
+                                </c:if>
                                 <dl>
-                                    <dt>Начало работы</dt>
-                                    <dd><input type="text" name="${sectionType}" size=20 value="${period.start}"></dd>
-                                </dl>
-                                <dl>
-                                    <dt>Конец работы</dt>
-                                    <dd><input type="text" name="${sectionType}" size=20 value="${period.end}"></dd>
-                                </dl>
-                                <dl>
-                                    <dt>Должность</dt>
-                                    <dd><input type="text" name="${sectionType}" size=80 value="${period.title}"></dd>
+                                    <dt>Должность/специальность</dt>
+                                    <dd><input type="text" name="${sectionType}${counter.index}title" size=80 value="${period.title}"></dd>
                                 </dl>
                                 <dl>
                                     <dt>Описание</dt>
-                                    <textarea name="${sectionType}" cols=70 rows=5>${period.description}</textarea>
+                                    <textarea name="${sectionType}${counter.index}description" cols=70 rows=5>${period.description}</textarea>
                                 </dl>
+                                <div style="margin: 50px"></div>
                             </c:forEach>
                         </c:forEach>
                     </c:when>

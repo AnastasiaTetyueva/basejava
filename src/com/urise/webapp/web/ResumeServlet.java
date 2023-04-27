@@ -3,6 +3,7 @@ package com.urise.webapp.web;
 import com.urise.webapp.Config;
 import com.urise.webapp.model.*;
 import com.urise.webapp.storage.SqlStorage;
+import com.urise.webapp.util.DateUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
@@ -45,24 +46,47 @@ public class ResumeServlet extends HttpServlet {
         }
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
-            if (value != null && value.trim().length() != 0) {
                 switch (type) {
                     case PERSONAL:
                     case OBJECTIVE:
-                        r.setSection(type, new TextSection(value));
+                        if (value != null && value.trim().length() != 0) {
+                            r.setSection(type, new TextSection(value));
+                        } else {
+                            r.getSections().remove(type);
+                        }
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        r.setSection(type, new ListSection(Arrays.asList(value.split("\n"))));
+                        if (value != null && value.trim().length() != 0) {
+                            r.setSection(type, new ListSection(Arrays.asList(value.split("\n"))));
+                        } else {
+                            r.getSections().remove(type);
+                        }
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        r.setSection(type, new OrganizationSection());
+                        List<Organization> orgs = new ArrayList<>();
+                        String[] names = request.getParameterValues(type.name());
+                        for (int i = 0; i < names.length; i++) {
+                            List<Period> periodList = new ArrayList<>();
+                            String name = names[i];
+                            String website = request.getParameterValues(type.name() + "website")[i];
+                            String[] startDates = request.getParameterValues(type.name() + i + "start");
+                            String[] endDates = request.getParameterValues(type.name() + i + "end");
+                            String[] titles = request.getParameterValues(type.name() + i + "title");
+                            String[] descriptions = request.getParameterValues(type.name() + i + "description");
+                            for (int j = 0; j < titles.length; j++) {
+                                if (titles[j] != null) {
+                                    periodList.add(new Period(DateUtil.parse(startDates[j]), DateUtil.parse(endDates[j]), titles[j], descriptions[j]));
+                                }
+                            }
+                            if (titles.length > 0 && !name.isEmpty()) {
+                                orgs.add(new Organization(periodList, name, website));
+                            }
+                        }
+                        r.setSection(type, new OrganizationSection(orgs));
                     default: break;
                 }
-            } else {
-                r.getSections().remove(type);
-            }
         }
         if (isCreating) {
             storage.save(r);
@@ -70,7 +94,6 @@ public class ResumeServlet extends HttpServlet {
             storage.update(r);
         }
         response.sendRedirect("resume");
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
