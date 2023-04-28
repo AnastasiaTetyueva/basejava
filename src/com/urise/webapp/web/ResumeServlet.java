@@ -4,6 +4,7 @@ import com.urise.webapp.Config;
 import com.urise.webapp.model.*;
 import com.urise.webapp.storage.SqlStorage;
 import com.urise.webapp.util.DateUtil;
+import com.urise.webapp.util.HtmlUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
@@ -38,7 +39,7 @@ public class ResumeServlet extends HttpServlet {
         r.setFullName(fullName);
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
-            if (value != null && value.trim().length() != 0) {
+            if (!HtmlUtil.isEmpty(value)) {
                 r.setContact(type, value);
             } else {
                 r.getContacts().remove(type);
@@ -49,7 +50,7 @@ public class ResumeServlet extends HttpServlet {
                 switch (type) {
                     case PERSONAL:
                     case OBJECTIVE:
-                        if (value != null && value.trim().length() != 0) {
+                        if (!HtmlUtil.isEmpty(value)) {
                             r.setSection(type, new TextSection(value));
                         } else {
                             r.getSections().remove(type);
@@ -57,7 +58,7 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        if (value != null && value.trim().length() != 0) {
+                        if (!HtmlUtil.isEmpty(value)) {
                             r.setSection(type, new ListSection(Arrays.asList(value.split("\n"))));
                         } else {
                             r.getSections().remove(type);
